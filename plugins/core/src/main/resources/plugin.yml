@@ -1,0 +1,8 @@
+name: Hungergames
+version: ${project.version}
+main: io.github.blitzbeule.hungergames.Hungergames
+api-version: 1.16
+prefix: hg
+authors: [ blitzbeule ]
+description: Hungergames Plugin
+website: blitzbeule.github.io/hungergames
