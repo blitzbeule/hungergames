@@ -7,9 +7,16 @@ import io.github.blitzbeule.hungergames.config.LocalizationGroups;
 import io.github.blitzbeule.hungergames.config.LocalizationLanguage;
 import io.github.blitzbeule.hungergames.config.SettingsManager;
 import io.github.blitzbeule.hungergames.config.lgroups.Message;
+import io.github.blitzbeule.hungergames.events.GameEventListener;
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class Hungergames extends JavaPlugin {
+import java.util.HashMap;
+
+public final class Hungergames extends JavaPlugin implements Listener {
 
    public Message getLmessages() {
         return lmessages;
@@ -35,6 +42,8 @@ public final class Hungergames extends JavaPlugin {
 
     State state;
 
+    HashMap<String, Listener> listeners;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -56,11 +65,18 @@ public final class Hungergames extends JavaPlugin {
 
     void initListeners() {
 
+        listeners.put("GameEventListener", new GameEventListener(this));
 
+        getServer().getPluginManager().registerEvents(this, this);
+
+        if (state.getPhase() == State.GamePhase.GAME)
+            getServer().getPluginManager().registerEvents(listeners.get("GameEventListener"), this);
 
     }
 
     void initBeforeState() {
+        this.listeners = new HashMap<String, Listener>();
+
         this.lmessages = new Message(new FileLProvider(this, LocalizationGroups.MESSAGES, LocalizationLanguage.EN), this);
         this.gsm = new SettingsManager(this, "config.yml");
         this.dsm = new SettingsManager(this, "data.yml");
@@ -69,5 +85,17 @@ public final class Hungergames extends JavaPlugin {
     void initCommands() {
         this.getCommand("hg").setExecutor(new hgCommand(this));
         this.getCommand("hginfo").setExecutor(new infoCommand(this));
+    }
+
+    @EventHandler
+    public void onStateChanged(StateEvent event) {
+        if (event.isGamePhaseChanged() == true) {
+            if (event.getOldGamePhase() == State.GamePhase.GAME && state.getPhase() != State.GamePhase.GAME) {
+                HandlerList.unregisterAll(listeners.get("GameEventListener"));
+            }
+            if (event.getOldGamePhase() != State.GamePhase.GAME && state.getPhase() == State.GamePhase.GAME) {
+                getServer().getPluginManager().registerEvents(listeners.get("GameEventListener"), this);
+            }
+        }
     }
 }

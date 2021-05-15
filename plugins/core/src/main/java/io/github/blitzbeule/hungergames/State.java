@@ -13,9 +13,10 @@ public class State {
     }
 
     public void setPhase(GamePhase phase) {
+        StateEvent e = new StateEvent(true, this.phase);
         this.phase = phase;
         this.updateConf();
-        Bukkit.getPluginManager().callEvent(new StateChanged(true));
+        Bukkit.getPluginManager().callEvent(e);
     }
 
     public HashMap<String, Object> getData() {
