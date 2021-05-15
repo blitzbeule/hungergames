@@ -1,9 +1,11 @@
 package io.github.blitzbeule.hungergames.events;
 
 import io.github.blitzbeule.hungergames.Hungergames;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class GameEventListener implements Listener {
 
@@ -14,15 +16,17 @@ public class GameEventListener implements Listener {
     }
 
     @EventHandler
-    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-        if (event.getMessage().startsWith("/")) {
-            if (event.getPlayer().hasPermission("hg.admin.sendIngameCommands")) {
-                return;
-            }
-        }
-
+    public void onAsyncChat(AsyncChatEvent event) {
         event.setCancelled(true);
 
+    }
+
+    @EventHandler
+    public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        if (event.getPlayer().hasPermission("hg.admin.sendIngameCommands")) {
+            return;
+        }
+        event.setCancelled(true);
     }
 
 
