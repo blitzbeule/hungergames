@@ -8,6 +8,7 @@ import io.github.blitzbeule.hungergames.config.LocalizationLanguage;
 import io.github.blitzbeule.hungergames.config.SettingsManager;
 import io.github.blitzbeule.hungergames.config.lgroups.Message;
 import io.github.blitzbeule.hungergames.events.GameEventListener;
+import io.github.blitzbeule.hungergames.phases.Setup;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -18,29 +19,35 @@ import java.util.HashMap;
 
 public final class Hungergames extends JavaPlugin implements Listener {
 
-   public Message getLmessages() {
+    public Setup getSetupPhase() {
+        return setupPhase;
+    }
+
+    private Setup setupPhase;
+
+    public Message getLmessages() {
         return lmessages;
     }
 
-    Message lmessages;
+    private Message lmessages;
 
     public SettingsManager getGsm() {
         return gsm;
     }
 
-    SettingsManager gsm;
+    private SettingsManager gsm;
 
     public SettingsManager getDsm() {
         return dsm;
     }
 
-    SettingsManager dsm;
+    private SettingsManager dsm;
 
     public State getState() {
         return state;
     }
 
-    State state;
+    private State state;
 
     HashMap<String, Listener> listeners;
 
@@ -48,6 +55,7 @@ public final class Hungergames extends JavaPlugin implements Listener {
     public void onEnable() {
         // Plugin startup logic
         initBeforeState();
+        initPhases();
 
         this.state = new State(this);
 
@@ -61,6 +69,10 @@ public final class Hungergames extends JavaPlugin implements Listener {
         // Plugin shutdown logic
         gsm.saveConfig();
         dsm.saveConfig();
+    }
+
+    void initPhases() {
+        setupPhase = new Setup(this);
     }
 
     void initListeners() {

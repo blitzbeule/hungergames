@@ -18,7 +18,11 @@ public class hgCommand extends CommandA {
              args = new String[]{"help"};
         }
 
-        switch (args[0]) {
+        String subcommand = args[0];
+        switch (subcommand) {
+            case "setup":
+                return  hg.getCommand("hgsetup").execute(sender, "hg setup", args);
+
             case "info":
                 return hg.getCommand("hginfo").execute(sender, "hg info", args);
 
