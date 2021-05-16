@@ -79,6 +79,7 @@ public class State {
 
     public enum GamePhase {
         NONE("none"),
+        SETUP("setup"),
         PRE_GAME("pre"),
         QUALI("quali"),
         START("start"),
@@ -91,6 +92,9 @@ public class State {
             switch (label) {
                 case "none":
                     return GamePhase.NONE;
+
+                case "setup":
+                    return GamePhase.SETUP;
 
                 case "pre":
                     return GamePhase.PRE_GAME;
