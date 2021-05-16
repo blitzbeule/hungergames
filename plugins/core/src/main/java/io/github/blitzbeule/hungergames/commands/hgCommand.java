@@ -1,6 +1,7 @@
 package io.github.blitzbeule.hungergames.commands;
 
 import io.github.blitzbeule.hungergames.Hungergames;
+import io.github.blitzbeule.hungergames.State;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -25,8 +26,12 @@ public class hgCommand extends CommandA {
                 return  hg.getCommand("hghelp").execute(sender, "hg help", args);
 
             case "test":
-                sender.sendMessage("No test at the moment");
+                //sender.sendMessage("No test at the moment");
+                hg.getState().setPhase(State.GamePhase.GAME);
                 return true;
+
+            case "testr":
+                hg.getState().setPhase(State.GamePhase.NONE);
 
             default:
                 return false;
