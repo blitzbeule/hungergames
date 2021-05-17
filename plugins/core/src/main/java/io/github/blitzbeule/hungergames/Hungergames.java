@@ -2,6 +2,7 @@ package io.github.blitzbeule.hungergames;
 
 import io.github.blitzbeule.hungergames.commands.hgCommand;
 import io.github.blitzbeule.hungergames.commands.infoCommand;
+import io.github.blitzbeule.hungergames.commands.setupCommand;
 import io.github.blitzbeule.hungergames.config.FileLProvider;
 import io.github.blitzbeule.hungergames.config.LocalizationGroups;
 import io.github.blitzbeule.hungergames.config.LocalizationLanguage;
@@ -97,6 +98,7 @@ public final class Hungergames extends JavaPlugin implements Listener {
     void initCommands() {
         this.getCommand("hg").setExecutor(new hgCommand(this));
         this.getCommand("hginfo").setExecutor(new infoCommand(this));
+        this.getCommand("hgsetup").setExecutor(new setupCommand(this));
     }
 
     @EventHandler
