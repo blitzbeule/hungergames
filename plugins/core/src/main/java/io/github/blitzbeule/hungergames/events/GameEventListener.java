@@ -28,7 +28,6 @@ public class GameEventListener implements Listener {
 
     @EventHandler
     public void onAsyncChat(AsyncChatEvent event) {
-        //TODO needs further testing
         event.setCancelled(true);
         if (event.getPlayer().getGameMode() == GameMode.SPECTATOR) {
             Set<Player> recipients = event.recipients();
