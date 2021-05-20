@@ -67,10 +67,23 @@ public class setupCommand extends CommandA{
                 if (args.length > 2) {
                     tname = args[2].toLowerCase().strip();
 
+                    if (args.length > 3) {
+                        dname = "";
+                        for (int i = 3; i < args.length; i++) {
+                            dname = dname + args[i] + " ";
+                        }
+                        dname.strip();
+                    } else {
+                        dname = tname;
+                    }
+
                 } else {
-                    tname = new Utility.NameGenerator(5).getName();
+                    tname = new Utility.NameGenerator(5).getName().toLowerCase().strip();
                     dname = tname;
                 }
+
+                //TODO: work with tname and dname and register a new team
+
                 break;
         }
 
