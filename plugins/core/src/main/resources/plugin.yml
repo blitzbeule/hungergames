@@ -16,7 +16,7 @@ commands:
     aliases: ["hg info"]
   hgsetup:
     description: Setup the hg plugin
-    usage: "Usage: /<command> <argument> [parameters...]"
+    usage: "Usage: /<command> <operation> [parameters...]"
     aliases: ["hg setup"]
 permissions:
   hg.admin.sendIngameCommands:

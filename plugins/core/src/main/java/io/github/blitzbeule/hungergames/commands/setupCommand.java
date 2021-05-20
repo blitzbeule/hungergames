@@ -2,9 +2,16 @@ package io.github.blitzbeule.hungergames.commands;
 
 import io.github.blitzbeule.hungergames.Hungergames;
 import io.github.blitzbeule.hungergames.State;
+import io.github.blitzbeule.hungergames.Utility;
 import net.kyori.adventure.text.Component;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.conversations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Locale;
 
 public class setupCommand extends CommandA{
     public setupCommand(Hungergames hg) {
@@ -32,6 +39,9 @@ public class setupCommand extends CommandA{
                 hg.getState().setPhase(State.GamePhase.PRE_GAME);
                 return true;
 
+            case "teams":
+                return setupTeams(sender, command, label, args);
+
             case "-1":
             default:
                 sender.sendMessage(Component.text("You must specify a valid subcommand!"));
@@ -39,4 +49,32 @@ public class setupCommand extends CommandA{
 
         }
     }
+
+    boolean setupTeams(CommandSender sender, Command command, String label, String[] args) {
+
+        if (args.length == 1) {
+            sender.sendMessage("Please use a valid operation");
+            //TODO add help
+            return false;
+        }
+
+        switch (args[1]) {
+            case "add":
+                //TODO validate input
+
+                String tname;
+                String dname;
+                if (args.length > 2) {
+                    tname = args[2].toLowerCase().strip();
+
+                } else {
+                    tname = new Utility.NameGenerator(5).getName();
+                    dname = tname;
+                }
+                break;
+        }
+
+        return false;
+    }
+
 }
