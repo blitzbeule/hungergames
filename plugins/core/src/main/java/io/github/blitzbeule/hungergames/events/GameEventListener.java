@@ -28,13 +28,12 @@ public class GameEventListener implements Listener {
 
     @EventHandler
     public void onAsyncChat(AsyncChatEvent event) {
-        //TODO needs further testing
         event.setCancelled(true);
         if (event.getPlayer().getGameMode() == GameMode.SPECTATOR) {
             Set<Player> recipients = event.recipients();
             for (Player player : recipients) {
                 if (player.getGameMode() == GameMode.SPECTATOR) {
-                    Component c = event.composer().composeChat(player, player.displayName(), event.message());
+                    Component c = event.composer().composeChat(event.getPlayer(), event.getPlayer().displayName(), event.message());
                     player.sendMessage(event.getPlayer(), c, MessageType.CHAT);
                 }
             }
