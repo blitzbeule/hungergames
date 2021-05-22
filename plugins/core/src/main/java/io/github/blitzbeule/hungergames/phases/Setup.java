@@ -14,7 +14,6 @@ public class Setup extends Phase{
 
     @Override
     public void enable() {
-
     }
 
     @Override

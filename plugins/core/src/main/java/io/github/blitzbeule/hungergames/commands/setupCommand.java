@@ -4,18 +4,23 @@ import io.github.blitzbeule.hungergames.Hungergames;
 import io.github.blitzbeule.hungergames.State;
 import io.github.blitzbeule.hungergames.Utility;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.conversations.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
-import java.util.Locale;
+import java.util.HashSet;
+import java.util.Random;
 
-public class setupCommand extends CommandA{
+public class setupCommand extends CommandA {
+
+    Scoreboard scoreboard;
+    static HashSet<NamedTextColor> colors = new HashSet<>(NamedTextColor.NAMES.values());
+
     public setupCommand(Hungergames hg) {
         super(hg);
+        this.scoreboard = hg.getServer().getScoreboardManager().getMainScoreboard();
     }
 
     @Override
@@ -60,34 +65,84 @@ public class setupCommand extends CommandA{
 
         switch (args[1]) {
             case "add":
-                //TODO validate input
+                addTeam(args);
+                return true;
 
-                String tname;
-                String dname;
-                if (args.length > 2) {
-                    tname = args[2].toLowerCase().strip();
-
-                    if (args.length > 3) {
-                        dname = "";
-                        for (int i = 3; i < args.length; i++) {
-                            dname = dname + args[i] + " ";
-                        }
-                        dname.strip();
-                    } else {
-                        dname = tname;
-                    }
-
-                } else {
-                    tname = new Utility.NameGenerator(5).getName().toLowerCase().strip();
-                    dname = tname;
+            case "init":
+                if (args.length != 3) {
+                    sender.sendMessage("Please provide a valid number");
+                    return false;
+                }
+                int n = Integer.parseInt(args[2]);
+                if (n == 1 || n > 16) {
+                    sender.sendMessage("Please provide a valid number");
+                    return false;
                 }
 
-                //TODO: work with tname and dname and register a new team
+                for (int i = 0; i<n; i++) {
+                    if (!addTeam(new String[0])) {
+                        sender.sendMessage("No more teams available right now.");
+                        return true;
+                    }
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                sender.sendMessage("We have created the teams for you");
+                return true;
 
-                break;
         }
 
         return false;
+    }
+
+    boolean addTeam(String[] args) {
+        //TODO: Validate input
+
+        String tname;
+        String dname;
+        if (args.length > 2) {
+            tname = args[2].toLowerCase().strip();
+
+            if (args.length > 3) {
+                dname = "";
+                for (int i = 3; i < args.length; i++) {
+                    dname = dname + args[i] + " ";
+                }
+                dname.strip();
+            } else {
+                dname = tname;
+            }
+
+        } else {
+            boolean name_proofed;
+            do {
+                name_proofed = true;
+                tname = new Utility.NameGenerator(5).getName().toLowerCase().strip();
+                dname = tname;
+
+                for (Team te: scoreboard.getTeams()) {
+                    if (te.getName().equalsIgnoreCase(tname)) {
+                        name_proofed = false;
+                        continue;
+                    }
+                }
+            } while (!name_proofed);
+        }
+
+        if (colors.size() == 0) return false;
+        Object[] cs = colors.toArray();
+        int cursor = new Random().nextInt(cs.length);
+        NamedTextColor color = (NamedTextColor) cs[cursor];
+        colors.remove(color);
+
+        Team t = scoreboard.registerNewTeam(tname);
+
+        t.color(color);
+        t.displayName(Component.text(dname));
+        return true;
     }
 
 }
