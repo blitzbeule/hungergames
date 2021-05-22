@@ -14,6 +14,10 @@ commands:
     description: Get Plugin Info
     usage: "Usage: /<command>"
     aliases: ["hg info"]
+  hgsetup:
+    description: Setup the hg plugin
+    usage: "Usage: /<command> <operation> [parameters...]"
+    aliases: ["hg setup"]
 permissions:
   hg.admin.sendIngameCommands:
     description: "Allow Player to send commands while he is ingame"

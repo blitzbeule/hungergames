@@ -18,12 +18,27 @@ public class hgCommand extends CommandA {
              args = new String[]{"help"};
         }
 
-        switch (args[0]) {
+        String[] argss;
+
+        if (args.length > 1) {
+            argss = new String[args.length - 1];
+            for (int i=0; i<argss.length; i++) {
+                argss[i] = args[i+1];
+            }
+        } else {
+            argss = new String[0];
+        }
+
+        String subcommand = args[0];
+        switch (subcommand) {
+            case "setup":
+                return  hg.getCommand("hgsetup").execute(sender, "hg setup", argss);
+
             case "info":
-                return hg.getCommand("hginfo").execute(sender, "hg info", args);
+                return hg.getCommand("hginfo").execute(sender, "hg info", argss);
 
             case "help":
-                return  hg.getCommand("hghelp").execute(sender, "hg help", args);
+                return  hg.getCommand("hghelp").execute(sender, "hg help", argss);
 
             case "test":
                 //sender.sendMessage("No test at the moment");
