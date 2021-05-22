@@ -7,9 +7,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -64,6 +66,44 @@ public class setupCommand extends CommandA {
         }
 
         switch (args[1]) {
+
+            case "populate":
+
+                ArrayList<Player> players = new ArrayList<>(hg.getServer().getOnlinePlayers());
+                ArrayList<Team> teams = new ArrayList<>(scoreboard.getTeams());
+
+                for (Player p: hg.getServer().getOnlinePlayers()) {
+                    if (scoreboard.getEntryTeam(p.getName()) != null) {
+                        players.remove(p);
+                    }
+                }
+                if (players.size() == 0) {
+                    sender.sendMessage("No player left with no team.");
+                    return true;
+                }
+
+                for (Team t: scoreboard.getTeams()) {
+                    if (t.getEntries().size() > 1) {
+                        teams.remove(t);
+                    }
+                }
+                if (teams.size() == 0) {
+                    sender.sendMessage("No empty enough teams left");
+                    return true;
+                }
+
+                String result = "";
+                for (Player p: players) {
+                    Team t = teams.get(new Random().nextInt(teams.size()));
+                    if ((t.getEntries().size() + 1) > 1) {
+                        teams.remove(t);
+                    }
+                    t.addEntry(p.getName());
+                    result = result + p.getName() + " -> " + t.getName() + " \n";
+                }
+                sender.sendMessage("The result was: \n" + result);
+                return true;
+
             case "add":
                 addTeam(args);
                 return true;
