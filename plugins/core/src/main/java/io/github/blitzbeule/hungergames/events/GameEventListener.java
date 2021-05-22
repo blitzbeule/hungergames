@@ -2,8 +2,8 @@ package io.github.blitzbeule.hungergames.events;
 
 import io.github.blitzbeule.hungergames.Hungergames;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.MessageType;
-import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import java.util.Set;
+import java.util.HashSet;
 
 public class GameEventListener implements Listener {
 
@@ -30,13 +30,21 @@ public class GameEventListener implements Listener {
     public void onAsyncChat(AsyncChatEvent event) {
         event.setCancelled(true);
         if (event.getPlayer().getGameMode() == GameMode.SPECTATOR) {
-            Set<Player> recipients = event.recipients();
-            for (Player player : recipients) {
-                if (player.getGameMode() == GameMode.SPECTATOR) {
-                    Component c = event.composer().composeChat(event.getPlayer(), event.getPlayer().displayName(), event.message());
-                    player.sendMessage(event.getPlayer(), c, MessageType.CHAT);
+            HashSet<Player> players = new HashSet<>(hg.getServer().getOnlinePlayers());
+            for (Player player : hg.getServer().getOnlinePlayers()) {
+                if (player.getGameMode() != GameMode.SPECTATOR) {
+                    players.remove(player);
                 }
             }
+            Audience audience = Audience.audience(
+                    Audience.audience(players),
+                    hg.getServer().getConsoleSender()
+            );
+
+            audience.sendMessage(
+                    event.getPlayer(),
+                    event.renderer().render(event.getPlayer(), event.getPlayer().displayName(), event.message(), audience),
+                    MessageType.CHAT);
 
         }
 
@@ -49,7 +57,5 @@ public class GameEventListener implements Listener {
         }
         event.setCancelled(true);
     }
-
-
 
 }
