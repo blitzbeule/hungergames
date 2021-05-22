@@ -57,5 +57,5 @@ public class GameEventListener implements Listener {
         }
         event.setCancelled(true);
     }
-    
+
 }
