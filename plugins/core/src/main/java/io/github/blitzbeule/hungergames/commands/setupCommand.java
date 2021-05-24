@@ -11,9 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.*;
 
 public class setupCommand extends CommandA {
 
@@ -49,12 +47,36 @@ public class setupCommand extends CommandA {
             case "teams":
                 return setupTeams(sender, command, label, args);
 
+            case "pregame":
+                return setupPregame(sender, command, label, args);
+
             case "-1":
             default:
                 sender.sendMessage(Component.text("You must specify a valid subcommand!"));
                 return false;
 
         }
+    }
+
+    private boolean setupPregame(CommandSender sender, Command command, String label, String[] args) {
+
+        if (args.length == 1) {
+            sender.sendMessage("Please use a valid operation");
+            //TODO add help
+            return false;
+        }
+
+        switch (args[1]) {
+            case "makematches":
+                HashMap<String, String[]> teams = new HashMap<>();
+                for (Team t: scoreboard.getTeams()) {
+                    teams.put(t.getName(), t.getEntries().toArray(new String[t.getEntries().size()]));
+                }
+                matchmaking(teams);
+                return true;
+        }
+
+        return false;
     }
 
     boolean setupTeams(CommandSender sender, Command command, String label, String[] args) {
@@ -183,6 +205,31 @@ public class setupCommand extends CommandA {
         t.color(color);
         t.displayName(Component.text(dname));
         return true;
+    }
+
+    void matchmaking(HashMap<String, String[]> teams) {
+        //TODO: Validate teams HashMap
+
+        String[] steams = teams.keySet().toArray(new String[teams.size()]);
+        ArrayList<String[]> matches = new ArrayList<>();
+
+        for (int i = 0; i < steams.length; i++) {
+            for (int j = 0; j < (steams.length - (i+1)); j++) {
+                String[] match = new String[2];
+                match[0] = steams[i];
+                match[1] = steams[j+i+1];
+                matches.add(match);
+            }
+        }
+
+        String r = "[";
+        for (String[] s: matches) {
+            r = r + Arrays.toString(s) + ",";
+        }
+        r = r + "]";
+
+        System.out.println(r);
+
     }
 
 }
