@@ -117,9 +117,17 @@ public class setupCommand extends CommandA {
                 String result = "";
                 for (Player p: players) {
                     Team t = teams.get(new Random().nextInt(teams.size()));
-                    if ((t.getEntries().size() + 1) > 1) {
-                        teams.remove(t);
+
+                    //TODO: Needs testing
+                    if (t.getSize() == 1) {
+                        String e = t.getEntries().toArray(new String[1])[0];
+                        if (e.startsWith("#")) {
+                            t.removeEntry(e);
+                        } else {
+                            teams.remove(t);
+                        }
                     }
+
                     t.addEntry(p.getName());
                     result = result + p.getName() + " -> " + t.getName() + " \n";
                 }
@@ -204,6 +212,7 @@ public class setupCommand extends CommandA {
 
         t.color(color);
         t.displayName(Component.text(dname));
+        t.addEntry("#" + tname + "fake_player_fix");
         return true;
     }
 
