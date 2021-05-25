@@ -74,6 +74,16 @@ public class setupCommand extends CommandA {
                 }
                 matchmaking(teams);
                 return true;
+
+            case "makematchest":
+                HashMap<String, String[]> teamst = new HashMap<>();
+                teamst.put("team1", new String[]{"p1", "p2"});
+                teamst.put("team2", new String[]{"p3", "p4"});
+                teamst.put("team3", new String[]{"p5", "p6"});
+                teamst.put("team4", new String[]{"p7", "p8"});
+                teamst.put("team5", new String[]{"p9", "p10"});
+                matchmaking(teamst);
+                return true;
         }
 
         return false;
@@ -219,19 +229,86 @@ public class setupCommand extends CommandA {
     void matchmaking(HashMap<String, String[]> teams) {
         //TODO: Validate teams HashMap
 
-        String[] steams = teams.keySet().toArray(new String[teams.size()]);
+        ArrayList<String> steams = new ArrayList<>(teams.keySet());
         ArrayList<String[]> matches = new ArrayList<>();
+        Random rgen = new Random();
 
-        for (int i = 0; i < steams.length; i++) {
-            for (int j = 0; j < (steams.length - (i+1)); j++) {
-                String[] match = new String[2];
-                match[0] = steams[i];
-                match[1] = steams[j+i+1];
-                matches.add(match);
+        //Randomize player order
+        for (int i = 0; i < steams.size(); i++) {
+            String[] members = teams.get(steams.get(i)).clone();
+            if (rgen.nextBoolean()) {
+                String temp = members[0];
+                members[0] = members[1];
+                members[1] = temp;
+            }
+            teams.put(steams.get(i), members);
+        }
+
+        //Make matches
+        boolean odd = false;
+        if (teams.size() % 2 ==1) {
+            steams.add("placeholder1234567890");
+            odd = true;
+        }
+        int rounds = steams.size() - 1;
+        ArrayList<int[]> indeces = new ArrayList<>();
+        for (int i = 0; i < (steams.size()/2); i++) {
+            indeces.add(new int[]{i, rounds-i});
+        }
+        for (int i = 0; i < rounds; i++) {
+            for (int[] index: indeces) {
+                matches.add(new String[]{steams.get(index[0]), steams.get(index[1])});
+            }
+
+            String temp = steams.get(steams.size()-1);
+            for (int j = 0; j < (steams.size()-1); j++) {
+                int k = (j % (steams.size() - 1)) + 1;
+                String temps = steams.get(k);
+                steams.set(k, temp);
+                temp = temps;
+            }
+        }
+        if (odd) {
+            LinkedList<Integer> placeholderIndeces = new LinkedList<>();
+            for (int i = 0; i < matches.size(); i++) {
+                for (String team: matches.get(i)) {
+                    if (team.equalsIgnoreCase("placeholder1234567890")) {
+                        placeholderIndeces.addFirst(i);
+                        break;
+                    }
+                }
+            }
+            for (int index: placeholderIndeces) {
+                matches.remove(index);
             }
         }
 
         String r = "[";
+        for (String[] s: matches) {
+            r = r + Arrays.toString(s) + ",";
+        }
+        r = r + "]";
+
+        System.out.println(r);
+
+        //Substitute teams with players
+        HashMap<String, Integer> cursors = new HashMap<>();
+        for (String steam: steams) {
+            cursors.put(steam, 0);
+        }
+        ArrayList<String[]> pmatches = (ArrayList<String[]>) matches.clone();
+
+        for (int i = 0; i < matches.size(); i++) {
+            String[] pmatch = pmatches.get(i);
+            for (int j = 0; j < 2; j++) {
+                String temp = pmatch[j];
+                pmatch[j] = teams.get(temp)[(cursors.get(temp)%2)];
+                cursors.put(temp, (cursors.get(temp)+ 1));
+            }
+
+        }
+
+        r = "[";
         for (String[] s: matches) {
             r = r + Arrays.toString(s) + ",";
         }
