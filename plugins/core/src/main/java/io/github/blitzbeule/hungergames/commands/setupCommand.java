@@ -72,8 +72,7 @@ public class setupCommand extends CommandA {
                 for (Team t: scoreboard.getTeams()) {
                     teams.put(t.getName(), t.getEntries().toArray(new String[t.getEntries().size()]));
                 }
-                matchmaking(teams);
-                return true;
+                return matchmaking(teams, sender);
 
             case "makematchest":
                 HashMap<String, String[]> teamst = new HashMap<>();
@@ -82,8 +81,7 @@ public class setupCommand extends CommandA {
                 teamst.put("team3", new String[]{"p5", "p6"});
                 teamst.put("team4", new String[]{"p7", "p8"});
                 teamst.put("team5", new String[]{"p9", "p10"});
-                matchmaking(teamst);
-                return true;
+                return matchmaking(teamst, sender);
         }
 
         return false;
@@ -226,10 +224,11 @@ public class setupCommand extends CommandA {
         return true;
     }
 
-    void matchmaking(HashMap<String, String[]> teams) {
+    boolean matchmaking(HashMap<String, String[]> teams, CommandSender sender) {
         //TODO: Validate teams HashMap
 
         ArrayList<String> steams = new ArrayList<>(teams.keySet());
+        Collections.shuffle(steams);
         ArrayList<String[]> matches = new ArrayList<>();
         Random rgen = new Random();
 
@@ -283,23 +282,14 @@ public class setupCommand extends CommandA {
             }
         }
 
-        String r = "[";
-        for (String[] s: matches) {
-            r = r + Arrays.toString(s) + ",";
-        }
-        r = r + "]";
-
-        System.out.println(r);
-
         //Substitute teams with players
         HashMap<String, Integer> cursors = new HashMap<>();
         for (String steam: steams) {
             cursors.put(steam, 0);
         }
-        ArrayList<String[]> pmatches = (ArrayList<String[]>) matches.clone();
 
         for (int i = 0; i < matches.size(); i++) {
-            String[] pmatch = pmatches.get(i);
+            String[] pmatch = matches.get(i);
             for (int j = 0; j < 2; j++) {
                 String temp = pmatch[j];
                 pmatch[j] = teams.get(temp)[(cursors.get(temp)%2)];
@@ -308,13 +298,16 @@ public class setupCommand extends CommandA {
 
         }
 
-        r = "[";
-        for (String[] s: matches) {
-            r = r + Arrays.toString(s) + ",";
+        HashMap<Integer, String[]> result = new HashMap<>();
+        for (int i = 0; i < matches.size(); i++) {
+            result.put(i, matches.get(i));
         }
-        r = r + "]";
 
-        System.out.println(r);
+        hg.getDsm().getConfig().set("phases.pregame.matches", result);
+        hg.getDsm().saveConfig();
+
+        sender.sendMessage("Matchmaking done and saved.");
+        return true;
 
     }
 
