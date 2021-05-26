@@ -1,0 +1,62 @@
+{
+	"surface_builder": "minecraft:grass",
+	"depth": 0.13,
+	"scale": 0.2,
+	"temperature": 0.8,
+	"downfall": 0.4,
+	"precipitation": "none",
+	"temperature_modifier": "none",
+	"category": "plains",
+	"player_spawn_friendly": false,
+	"effects": {
+		"sky_color": 16667100,
+		"fog_color": 16363732,
+		"water_color": 8339428,
+		"water_fog_color": 3212595,
+		"grass_color": 13369422,
+		"foliage_color": 8585270,
+		"particle": {
+			"options": {
+				"type": "minecraft:crimson_spore"
+			},
+			"probability": 0.2
+		}
+	},
+	"starts": [
+		"minecraft:ruined_portal",
+		"minecraft:nether_fossil",
+		"minecraft:mineshaft",
+		"minecraft:end_city"
+	],
+	"spawners": {},
+	"spawn_costs": {},
+	"carvers": {
+		"liquid": ["minecraft:cave"],
+		"air": ["minecraft:cave", "minecraft:canyon"]
+	},
+	"features": [
+		[],
+		["minecraft:lake_water"],
+		["minecraft:forest_rock"],
+		[],
+		[],
+		[],
+		[
+			"minecraft:ore_granite",
+			"minecraft:ore_coal",
+			"minecraft:ore_dirt",
+			"minecraft:ore_diorite",
+			"minecraft:ore_andesite"
+		],
+		["minecraft:ore_infested"],
+		[
+			"minecraft:patch_grass_plain",
+			"minecraft:flower_default",
+			"minecraft:spring_closed",
+			"minecraft:spring_open",
+			"minecraft:trees_savanna",
+			"minecraft:jungle_tree"
+		],
+		[]
+	]
+}
