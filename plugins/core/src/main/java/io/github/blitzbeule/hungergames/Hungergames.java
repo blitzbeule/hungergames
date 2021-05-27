@@ -16,6 +16,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.HashMap;
 
 public final class Hungergames extends JavaPlugin implements Listener {
@@ -55,6 +56,7 @@ public final class Hungergames extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        //saveResource("schematics" + File.separator + "pre_game_arena.schem.gz", true);
         initBeforeState();
         initPhases();
 
