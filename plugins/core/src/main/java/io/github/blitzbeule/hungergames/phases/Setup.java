@@ -3,7 +3,6 @@ package io.github.blitzbeule.hungergames.phases;
 import io.github.blitzbeule.hungergames.Hungergames;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -29,10 +28,10 @@ public class Setup extends Phase{
     }
 
 
-    public void gamerules() {
+    private void gamerules() {
         hg.getServer().setDefaultGameMode(GameMode.ADVENTURE);
 
-        World world = hg.getServer().getWorld(hg.getGsm().getConfig().getString("world"));
+        World world = hg.getServer().getWorld(hg.getGsm().getConfig().getString("world", "world"));
 
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
@@ -64,6 +63,9 @@ public class Setup extends Phase{
 
     @EventHandler
     public void onPlayerSpawn(PlayerSpawnLocationEvent event) {
+        if (event.getPlayer().getLastLogin() == 0) {
+            return;
+        }
         Location loc = hg.getDsm().getConfig().getLocation("setup.spawn");
         if (loc == null) {
             hg.getLogger().severe("Setup-Config is corrupted");

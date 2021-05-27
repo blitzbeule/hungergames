@@ -83,6 +83,9 @@ public class setupCommand extends CommandA {
                 }
                 Player player = (Player) sender;
                 hg.getDsm().getConfig().set("setup.spawn", player.getLocation());
+                hg.getDsm().saveConfig();
+                player.sendMessage("Spawn is marked");
+                return true;
 
             case "teams":
                 return setupTeams(sender, command, label, args);
