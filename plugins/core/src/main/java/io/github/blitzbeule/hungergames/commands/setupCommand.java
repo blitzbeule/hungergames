@@ -5,9 +5,12 @@ import io.github.blitzbeule.hungergames.State;
 import io.github.blitzbeule.hungergames.Utility;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -37,12 +40,33 @@ public class setupCommand extends CommandA {
 
             case "start":
                 hg.getState().setPhase(State.GamePhase.SETUP);
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    boolean result = this.onCommand(player, hg.getCommand("hgsetup"), "hgsetup", new String[]{"pregame", "spawnarena"});
+                    if (!result) {
+                        player.sendMessage("A mess");
+                        return true;
+                    }
+                    player.setGameMode(GameMode.CREATIVE);
+                    player.setFlying(true);
+                    Location loc = player.getLocation();
+                    loc.setY(240);
+                    player.teleport(loc.add(30, -6, 50));
+                }
                 return true;
 
             case "finish":
                 //TODO check somehow if setup is actually finished
                 hg.getState().setPhase(State.GamePhase.PRE_GAME);
                 return true;
+
+            case "spawn":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage("This command must be performed by player");
+                    return false;
+                }
+                Player player = (Player) sender;
+                hg.getDsm().getConfig().set("setup.spawn", player.getLocation());
 
             case "teams":
                 return setupTeams(sender, command, label, args);
