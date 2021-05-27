@@ -6,6 +6,7 @@ prefix: hg
 authors: [ blitzbeule ]
 description: Hungergames Plugin
 website: blitzbeule.github.io/hungergames
+depend: [WorldEdit]
 commands:
   hg:
     description: Command for all hg things

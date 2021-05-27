@@ -1,5 +1,17 @@
 package io.github.blitzbeule.hungergames.commands;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import io.github.blitzbeule.hungergames.Hungergames;
 import io.github.blitzbeule.hungergames.State;
 import io.github.blitzbeule.hungergames.Utility;
@@ -14,6 +26,10 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 public class setupCommand extends CommandA {
@@ -91,6 +107,38 @@ public class setupCommand extends CommandA {
         }
 
         switch (args[1]) {
+            case "spawnarena":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage("This command must be performed by player");
+                    return false;
+                }
+                Player player = (Player) sender;
+
+                Clipboard clipboard;
+                File file = new File(hg.getDataFolder(), File.separator + "schematics" + File.separator + "pre_game_arena.schem.gz");
+                ClipboardFormat format = ClipboardFormats.findByAlias("sponge");
+                try (ClipboardReader reader = format.getReader(hg.getResource("schematics/pre_game_arena.schem"))) {
+                    clipboard = reader.read();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                try (EditSession editSession = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(player.getWorld()))) {
+                    Operation operation = new ClipboardHolder(clipboard)
+                            .createPaste(editSession)
+                            .to(BlockVector3.at(
+                                    player.getLocation().getX(),
+                                    240,
+                                    player.getLocation().getZ()
+                            ))
+                            // configure here
+                            .build();
+                    Operations.complete(operation);
+                } catch (WorldEditException e) {
+                    e.printStackTrace();
+                }
+                return true;
+
             case "makematches":
                 HashMap<String, String[]> teams = new HashMap<>();
                 for (Team t: scoreboard.getTeams()) {
