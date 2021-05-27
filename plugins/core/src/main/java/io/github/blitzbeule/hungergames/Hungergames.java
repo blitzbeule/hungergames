@@ -8,15 +8,11 @@ import io.github.blitzbeule.hungergames.config.LocalizationGroups;
 import io.github.blitzbeule.hungergames.config.LocalizationLanguage;
 import io.github.blitzbeule.hungergames.config.SettingsManager;
 import io.github.blitzbeule.hungergames.config.lgroups.Message;
-import io.github.blitzbeule.hungergames.events.GameEventListener;
 import io.github.blitzbeule.hungergames.phases.Setup;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.util.HashMap;
 
 public final class Hungergames extends JavaPlugin implements Listener {
@@ -56,15 +52,13 @@ public final class Hungergames extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        //saveResource("schematics" + File.separator + "pre_game_arena.schem.gz", true);
         initBeforeState();
-        initPhases();
+        declarePhases();
 
         this.state = new State(this);
 
+        initPhases();
         initCommands();
-        initListeners();
-
     }
 
     @Override
@@ -74,19 +68,16 @@ public final class Hungergames extends JavaPlugin implements Listener {
         dsm.saveConfig();
     }
 
-    void initPhases() {
+    void declarePhases() {
         setupPhase = new Setup(this);
     }
 
-    void initListeners() {
-
-        listeners.put("GameEventListener", new GameEventListener(this));
-
-        getServer().getPluginManager().registerEvents(this, this);
-
-        if (state.getPhase() == State.GamePhase.GAME)
-            getServer().getPluginManager().registerEvents(listeners.get("GameEventListener"), this);
-
+    void initPhases() {
+        switch (state.getPhase()) {
+            case SETUP:
+                setupPhase.enabledOnStartup();
+                return;
+        }
     }
 
     void initBeforeState() {
@@ -105,13 +96,18 @@ public final class Hungergames extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onStateChanged(StateEvent event) {
-        if (event.isGamePhaseChanged() == true) {
-            if (event.getOldGamePhase() == State.GamePhase.GAME && state.getPhase() != State.GamePhase.GAME) {
-                HandlerList.unregisterAll(listeners.get("GameEventListener"));
-            }
-            if (event.getOldGamePhase() != State.GamePhase.GAME && state.getPhase() == State.GamePhase.GAME) {
-                getServer().getPluginManager().registerEvents(listeners.get("GameEventListener"), this);
-            }
+        if (event.getOldGamePhase().equals(state.getPhase())) {
+            return;
+        }
+        switch (event.getOldGamePhase()) {
+            case SETUP:
+                setupPhase.disable();
+                break;
+        }
+        switch (state.getPhase()) {
+            case SETUP:
+                setupPhase.enable();
+                break;
         }
     }
 }
