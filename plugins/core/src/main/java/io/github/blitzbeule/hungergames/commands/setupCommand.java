@@ -73,12 +73,25 @@ public class setupCommand extends CommandA {
                 return true;
 
             case "spawn":
+                if (args.length != 2) {
+                    sender.sendMessage("Please provide correct arguments");
+                    return false;
+                }
                 if (!(sender instanceof Player)) {
                     sender.sendMessage("This command must be performed by player");
                     return false;
                 }
                 Player player = (Player) sender;
-                hg.getDsm().getConfig().set("setup.spawn", player.getLocation());
+                String spawn = switch (args[1]) {
+                    case "lobby" -> "lobby";
+                    case "arena" -> "arena";
+                    default -> null;
+                };
+                if (spawn == null) {
+                    player.sendMessage("Invalid argument");
+                    return false;
+                }
+                hg.getDsm().getConfig().set("setup.spawn." + spawn, player.getLocation());
                 hg.getDsm().saveConfig();
                 player.sendMessage("Spawn is marked");
                 return true;
