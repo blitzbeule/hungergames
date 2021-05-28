@@ -1,16 +1,31 @@
 package io.github.blitzbeule.hungergames.commands;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import io.github.blitzbeule.hungergames.Hungergames;
 import io.github.blitzbeule.hungergames.State;
 import io.github.blitzbeule.hungergames.Utility;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.io.File;
 import java.util.*;
 
 public class setupCommand extends CommandA {
@@ -37,11 +52,35 @@ public class setupCommand extends CommandA {
 
             case "start":
                 hg.getState().setPhase(State.GamePhase.SETUP);
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    boolean result = this.onCommand(player, hg.getCommand("hgsetup"), "hgsetup", new String[]{"pregame", "spawnarena"});
+                    if (!result) {
+                        player.sendMessage("A mess");
+                        return true;
+                    }
+                    player.setGameMode(GameMode.CREATIVE);
+                    player.setFlying(true);
+                    Location loc = player.getLocation();
+                    loc.setY(240);
+                    player.teleport(loc.add(30, -6, 50));
+                }
                 return true;
 
             case "finish":
                 //TODO check somehow if setup is actually finished
                 hg.getState().setPhase(State.GamePhase.PRE_GAME);
+                return true;
+
+            case "spawn":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage("This command must be performed by player");
+                    return false;
+                }
+                Player player = (Player) sender;
+                hg.getDsm().getConfig().set("setup.spawn", player.getLocation());
+                hg.getDsm().saveConfig();
+                player.sendMessage("Spawn is marked");
                 return true;
 
             case "teams":
@@ -66,7 +105,77 @@ public class setupCommand extends CommandA {
             return false;
         }
 
+        Player player;
+
         switch (args[1]) {
+            case "arenaspawn":
+                if (args.length != 4) {
+                    sender.sendMessage("Please provide valid syntax");
+                    return false;
+                }
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage("Only Players can perform this command");
+                    return false;
+                }
+                player = (Player) sender;
+
+                int field = switch (args[2]) {
+                    case "1" -> 1;
+                    case "2" -> 2;
+                    default -> -1;
+                };
+                int pos = switch (args[3]) {
+                    case "1" -> 1;
+                    case "2" -> 2;
+                    default -> -1;
+                };
+                if (pos == -1 || field == -1) {
+                    player.sendMessage("Please provide valid arguments");
+                }
+
+                Location loc = player.getLocation().toCenterLocation();
+                loc.setPitch(0);
+                int[] yaws = {0, 90, 180, 270};
+                loc.setYaw(yaws[(Math.round(loc.getYaw() / 90f) % 4)]);
+                loc = loc.add(0, 1, 0);
+
+                hg.getDsm().getConfig().set("pregame.f-arena.spawns.field" + field + ".spawn" + pos, loc);
+                hg.getDsm().saveConfig();
+
+                return true;
+
+            case "spawnarena":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage("This command must be performed by player");
+                    return false;
+                }
+                player = (Player) sender;
+
+                Clipboard clipboard;
+                File file = new File(hg.getDataFolder(), File.separator + "schematics" + File.separator + "pre_game_arena.schem.gz");
+                ClipboardFormat format = ClipboardFormats.findByAlias("sponge");
+                try (ClipboardReader reader = format.getReader(hg.getResource("schematics/pre_game_arena.schem"))) {
+                    clipboard = reader.read();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                try (EditSession editSession = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(player.getWorld()))) {
+                    Operation operation = new ClipboardHolder(clipboard)
+                            .createPaste(editSession)
+                            .to(BlockVector3.at(
+                                    player.getLocation().getX(),
+                                    240,
+                                    player.getLocation().getZ()
+                            ))
+                            // configure here
+                            .build();
+                    Operations.complete(operation);
+                } catch (WorldEditException e) {
+                    e.printStackTrace();
+                }
+                return true;
+
             case "makematches":
                 HashMap<String, String[]> teams = new HashMap<>();
                 for (Team t: scoreboard.getTeams()) {
@@ -303,7 +412,7 @@ public class setupCommand extends CommandA {
             result.put(i, matches.get(i));
         }
 
-        hg.getDsm().getConfig().set("phases.pregame.matches", result);
+        hg.getDsm().getConfig().set("pregame.matches", result);
         hg.getDsm().saveConfig();
 
         sender.sendMessage("Matchmaking done and saved.");
