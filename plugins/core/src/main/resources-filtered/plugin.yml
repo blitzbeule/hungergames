@@ -19,6 +19,9 @@ commands:
     description: Setup the hg plugin
     usage: "Usage: /<command> <operation> [parameters...]"
     aliases: ["hg setup"]
+  hgtp:
+    description: Tp players to destinations
+    usage: "Usage: /<command> <destination>"
 permissions:
   hg.admin.sendIngameCommands:
     description: "Allow Player to send commands while he is ingame"
