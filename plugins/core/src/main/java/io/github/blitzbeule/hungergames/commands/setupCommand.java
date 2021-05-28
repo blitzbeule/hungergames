@@ -412,7 +412,7 @@ public class setupCommand extends CommandA {
             result.put(i, matches.get(i));
         }
 
-        hg.getDsm().getConfig().set("phases.pregame.matches", result);
+        hg.getDsm().getConfig().set("pregame.matches", result);
         hg.getDsm().saveConfig();
 
         sender.sendMessage("Matchmaking done and saved.");
