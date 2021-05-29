@@ -63,10 +63,10 @@ public class Setup extends Phase{
 
     @EventHandler
     public void onPlayerSpawn(PlayerSpawnLocationEvent event) {
-        if (event.getPlayer().getLastLogin() == 0) {
+        if (event.getPlayer().getLastLogin() != 0) {
             return;
         }
-        Location loc = hg.getDsm().getConfig().getLocation("setup.spawn");
+        Location loc = hg.getDsm().getConfig().getLocation("setup.spawn.lobby");
         if (loc == null) {
             hg.getLogger().severe("Setup-Config is corrupted");
             return;
@@ -80,7 +80,7 @@ public class Setup extends Phase{
             event.allow();
             return;
         }
-        Location loc = hg.getDsm().getConfig().getLocation("setup.spawn");
+        Location loc = hg.getDsm().getConfig().getLocation("setup.spawn.lobby");
         if (loc == null) {
             hg.getServer().sendMessage(Component.text("Setup spawn location must be specified! Players cannot spawn", NamedTextColor.RED));
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text("The server is not configured yet. Please contact your administrator if this is an error!", NamedTextColor.GOLD));
