@@ -14,8 +14,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-
 public final class Hungergames extends JavaPlugin implements Listener {
 
     public Setup getSetupPhase() {
@@ -48,8 +46,6 @@ public final class Hungergames extends JavaPlugin implements Listener {
 
     private State state;
 
-    HashMap<String, Listener> listeners;
-
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -60,6 +56,7 @@ public final class Hungergames extends JavaPlugin implements Listener {
 
         initPhases();
         initCommands();
+        getServer().getPluginManager().registerEvents(this, this);
     }
 
     @Override
@@ -82,8 +79,6 @@ public final class Hungergames extends JavaPlugin implements Listener {
     }
 
     void initBeforeState() {
-        this.listeners = new HashMap<String, Listener>();
-
         this.lmessages = new Message(new FileLProvider(this, LocalizationGroups.MESSAGES, LocalizationLanguage.EN), this);
         this.gsm = new SettingsManager(this, "config.yml");
         this.dsm = new SettingsManager(this, "data.yml");
@@ -98,7 +93,7 @@ public final class Hungergames extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onStateChanged(StateEvent event) {
-        if (event.getOldGamePhase().equals(state.getPhase())) {
+        if (event.getOldGamePhase().equals(event.getNew_game_phase())) {
             return;
         }
         switch (event.getOldGamePhase()) {
@@ -106,7 +101,7 @@ public final class Hungergames extends JavaPlugin implements Listener {
                 setupPhase.disable();
                 break;
         }
-        switch (state.getPhase()) {
+        switch (event.getNew_game_phase()) {
             case SETUP:
                 setupPhase.enable();
                 break;

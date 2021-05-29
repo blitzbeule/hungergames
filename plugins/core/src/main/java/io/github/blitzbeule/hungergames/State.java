@@ -1,9 +1,5 @@
 package io.github.blitzbeule.hungergames;
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-
 import java.util.HashMap;
 
 public class State {
@@ -13,10 +9,12 @@ public class State {
     }
 
     public void setPhase(GamePhase phase) {
-        StateEvent e = new StateEvent(true, this.phase);
-        this.phase = phase;
-        this.updateConf();
-        Bukkit.getPluginManager().callEvent(e);
+        StateEvent e = new StateEvent(true, this.phase, phase);
+        hg.getServer().getPluginManager().callEvent(e);
+        if (!(e.isCancelled())) {
+            this.phase = e.getNew_game_phase();
+            this.updateConf();
+        }
     }
 
     public HashMap<String, Object> getData() {
