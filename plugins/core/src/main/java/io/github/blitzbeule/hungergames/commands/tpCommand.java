@@ -6,6 +6,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class tpCommand extends CommandA {
 
@@ -26,12 +27,12 @@ public class tpCommand extends CommandA {
         }
         switch (args[0]) {
             case "pre_lobby":
-                player.teleport(hg.getDsm().getConfig().getLocation("setup.spawn.lobby"));
+                player.teleport(hg.getDsm().getConfig().getLocation("setup.spawn.lobby"), PlayerTeleportEvent.TeleportCause.PLUGIN);
                 player.sendActionBar(Component.text("Lobby", NamedTextColor.LIGHT_PURPLE));
                 break;
 
             case "pre_arena":
-                player.teleport(hg.getDsm().getConfig().getLocation("setup.spawn.arena"));
+                player.teleport(hg.getDsm().getConfig().getLocation("setup.spawn.arena"), PlayerTeleportEvent.TeleportCause.PLUGIN);
                 player.sendActionBar(Component.text("Arena", NamedTextColor.LIGHT_PURPLE));
                 break;
         }
