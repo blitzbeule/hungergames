@@ -15,6 +15,7 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import io.github.blitzbeule.hungergames.Hungergames;
 import io.github.blitzbeule.hungergames.State;
 import io.github.blitzbeule.hungergames.Utility;
+import io.github.blitzbeule.hungergames.storage.Match;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.GameMode;
@@ -420,12 +421,15 @@ public class setupCommand extends CommandA {
 
         }
 
-        HashMap<Integer, String[]> result = new HashMap<>();
+        Match[] r = new Match[matches.size()];
+        int frounds = hg.getGsm().getConfig().getInt("stickfight-rounds", 15);
         for (int i = 0; i < matches.size(); i++) {
-            result.put(i, matches.get(i));
+            Player p1 = hg.getServer().getPlayer(matches.get(i)[0]);
+            Player p2 = hg.getServer().getPlayer(matches.get(i)[1]);
+            r[i] = new Match(p1, p2, frounds);
         }
 
-        hg.getDsm().getConfig().set("pregame.matches", result);
+        hg.getDsm().getConfig().set("pregame.matches", r);
         hg.getDsm().saveConfig();
 
         sender.sendMessage("Matchmaking done and saved.");
