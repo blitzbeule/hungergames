@@ -429,7 +429,13 @@ public class setupCommand extends CommandA {
             r[i] = new Match(p1, p2, frounds);
         }
 
-        hg.getDsm().getConfig().set("pregame.matches", r);
+        HashMap<String, Match> result = new HashMap<>();
+
+        for (int i = 0; i < r.length; i++) {
+            result.put("" + i, r[i]);
+        }
+
+        hg.getDsm().getConfig().set("pregame.matches", result);
         hg.getDsm().saveConfig();
 
         sender.sendMessage("Matchmaking done and saved.");

@@ -88,7 +88,10 @@ public class Match implements ConfigurationSerializable {
     }
 
     private void initResults() {
-
+        for (int i = 0; i < results.length; i++) {
+            results[i][0] = Result.NONE;
+            results[i][1] = Result.NONE;
+        }
     }
 
     @Override
