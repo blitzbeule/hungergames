@@ -9,6 +9,7 @@ import io.github.blitzbeule.hungergames.config.LocalizationGroups;
 import io.github.blitzbeule.hungergames.config.LocalizationLanguage;
 import io.github.blitzbeule.hungergames.config.SettingsManager;
 import io.github.blitzbeule.hungergames.config.lgroups.Message;
+import io.github.blitzbeule.hungergames.phases.PreGame;
 import io.github.blitzbeule.hungergames.phases.Setup;
 import io.github.blitzbeule.hungergames.storage.Match;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -23,6 +24,12 @@ public final class Hungergames extends JavaPlugin implements Listener {
     }
 
     private Setup setupPhase;
+
+    public PreGame getPreGamePhase(){
+        return preGamePhase;
+    }
+
+    private PreGame preGamePhase;
 
     public Message getLmessages() {
         return lmessages;
@@ -71,12 +78,17 @@ public final class Hungergames extends JavaPlugin implements Listener {
 
     void declarePhases() {
         setupPhase = new Setup(this);
+        preGamePhase = new PreGame(this);
     }
 
     void initPhases() {
         switch (state.getPhase()) {
             case SETUP:
                 setupPhase.enabledOnStartup();
+                return;
+
+            case PRE_GAME:
+                preGamePhase.enabledOnStartup();
                 return;
         }
     }
@@ -103,10 +115,18 @@ public final class Hungergames extends JavaPlugin implements Listener {
             case SETUP:
                 setupPhase.disable();
                 break;
+
+            case PRE_GAME:
+                preGamePhase.disable();
+                break;
         }
         switch (event.getNew_game_phase()) {
             case SETUP:
                 setupPhase.enable();
+                break;
+
+            case PRE_GAME:
+                preGamePhase.enable();
                 break;
         }
     }
