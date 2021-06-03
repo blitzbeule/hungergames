@@ -19,6 +19,12 @@ commands:
     description: Setup the hg plugin
     usage: "Usage: /<command> <operation> [parameters...]"
     aliases: ["hg setup"]
+  hgpregame:
+    description: Controls the pregame
+    usage: "Usage: /<command> <operation> [parameters...]"
+  hgstart:
+    description: Starts the main game
+    usage: "Usage: /<command>"
   hgtp:
     description: Tp players to destinations
     usage: "Usage: /<command> <destination>"
