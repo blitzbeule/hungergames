@@ -9,10 +9,10 @@ import java.util.Map;
 
 public class Match implements ConfigurationSerializable {
 
-    OfflinePlayer[] players;
-    int rounds;
-    Result[][] results;
-    int current;
+    private OfflinePlayer[] players;
+    private int rounds;
+    private Result[][] results;
+    private int current;
 
 
 
