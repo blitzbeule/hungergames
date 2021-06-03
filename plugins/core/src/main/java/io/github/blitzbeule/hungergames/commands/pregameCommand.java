@@ -34,20 +34,39 @@ public class pregameCommand extends CommandA{
         int current = hg.getDsm().getConfig().getInt("pregame.current", 0);
         HashMap<String, Match> matches = hg.getDsm().getConfig().getObject("pregame.matches", HashMap.class);
 
-        Fight f1;
-        Fight f2;
-        try {
-            f1 = new Fight(current, matches.get("" + current), 1, hg);
-            f2 = new Fight((current + 1), matches.get("" + (current + 1)), 2, hg);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            sender.sendMessage("Failed. The players needed for next matches are not online.");
-            return false;
+        if (matches.size() <= current) {
+            sender.sendMessage("No more matches available");
+            return true;
         }
 
-        f1.start();
-        f2.start();
+        Fight f1;
+        Fight f2;
 
+        if (matches.size() <= (current + 1)) {
+            try {
+                f1 = new Fight(current, matches.get("" + current), 1, hg);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                sender.sendMessage("Failed. The players needed for next matches are not online.");
+                return false;
+            }
+            sender.sendMessage("Only one match was left. When it is finished all matches are done.");
+            f1.start();
+        } else {
+            try {
+                f1 = new Fight(current, matches.get("" + current), 1, hg);
+                f2 = new Fight((current + 1), matches.get("" + (current + 1)), 2, hg);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                sender.sendMessage("Failed. The players needed for next matches are not online.");
+                return false;
+            }
+            f1.start();
+            f2.start();
+        }
+
+        hg.getDsm().getConfig().set("pregame.current", current + 2);
+        hg.getDsm().saveConfig();
         return true;
     }
 }
