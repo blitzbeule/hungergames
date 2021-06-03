@@ -4,9 +4,12 @@ import io.github.blitzbeule.hungergames.Hungergames;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
@@ -25,6 +28,9 @@ public class Setup extends Phase{
     public void enable() {
         gamerules();
         hg.getServer().getPluginManager().registerEvents(this, hg);
+        hg.getServer().getOnlinePlayers().forEach((Player p) -> {
+            p.setFoodLevel(20);
+        });
     }
 
 
@@ -54,6 +60,16 @@ public class Setup extends Phase{
     public void disable() {
         HandlerList.unregisterAll(this);
 
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        event.getPlayer().setFoodLevel(20);
+    }
+
+    @EventHandler
+    public void onHunger(FoodLevelChangeEvent event) {
+        event.setCancelled(true);
     }
 
     @EventHandler

@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class PreGame extends Phase {
@@ -51,6 +53,9 @@ public class PreGame extends Phase {
     public void enable() {
         gamerules();
         hg.getServer().getPluginManager().registerEvents(this, hg);
+        hg.getServer().getOnlinePlayers().forEach((Player p) -> {
+            p.setFoodLevel(20);
+        });
     }
 
     @Override
@@ -58,6 +63,16 @@ public class PreGame extends Phase {
         HandlerList.unregisterAll(this);
     }
 
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        event.getPlayer().setFoodLevel(20);
+    }
+
+    @EventHandler
+    public void onHunger(FoodLevelChangeEvent event) {
+        event.setCancelled(true);
+    }
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
