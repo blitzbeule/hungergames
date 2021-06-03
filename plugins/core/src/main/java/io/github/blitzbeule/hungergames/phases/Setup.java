@@ -4,9 +4,12 @@ import io.github.blitzbeule.hungergames.Hungergames;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
@@ -25,6 +28,9 @@ public class Setup extends Phase{
     public void enable() {
         gamerules();
         hg.getServer().getPluginManager().registerEvents(this, hg);
+        hg.getServer().getOnlinePlayers().forEach((Player p) -> {
+            p.setFoodLevel(20);
+        });
     }
 
 
@@ -57,16 +63,26 @@ public class Setup extends Phase{
     }
 
     @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        event.getPlayer().setFoodLevel(20);
+    }
+
+    @EventHandler
+    public void onHunger(FoodLevelChangeEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onDamage(EntityDamageEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler
     public void onPlayerSpawn(PlayerSpawnLocationEvent event) {
-        if (event.getPlayer().getLastLogin() == 0) {
+        if (event.getPlayer().getLastLogin() != 0) {
             return;
         }
-        Location loc = hg.getDsm().getConfig().getLocation("setup.spawn");
+        Location loc = hg.getDsm().getConfig().getLocation("setup.spawn.lobby");
         if (loc == null) {
             hg.getLogger().severe("Setup-Config is corrupted");
             return;
@@ -80,7 +96,7 @@ public class Setup extends Phase{
             event.allow();
             return;
         }
-        Location loc = hg.getDsm().getConfig().getLocation("setup.spawn");
+        Location loc = hg.getDsm().getConfig().getLocation("setup.spawn.lobby");
         if (loc == null) {
             hg.getServer().sendMessage(Component.text("Setup spawn location must be specified! Players cannot spawn", NamedTextColor.RED));
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Component.text("The server is not configured yet. Please contact your administrator if this is an error!", NamedTextColor.GOLD));

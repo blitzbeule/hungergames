@@ -15,10 +15,12 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import io.github.blitzbeule.hungergames.Hungergames;
 import io.github.blitzbeule.hungergames.State;
 import io.github.blitzbeule.hungergames.Utility;
+import io.github.blitzbeule.hungergames.storage.Match;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -73,12 +75,25 @@ public class setupCommand extends CommandA {
                 return true;
 
             case "spawn":
+                if (args.length != 2) {
+                    sender.sendMessage("Please provide correct arguments");
+                    return false;
+                }
                 if (!(sender instanceof Player)) {
                     sender.sendMessage("This command must be performed by player");
                     return false;
                 }
                 Player player = (Player) sender;
-                hg.getDsm().getConfig().set("setup.spawn", player.getLocation());
+                String spawn = switch (args[1]) {
+                    case "lobby" -> "lobby";
+                    case "arena" -> "arena";
+                    default -> null;
+                };
+                if (spawn == null) {
+                    player.sendMessage("Invalid argument");
+                    return false;
+                }
+                hg.getDsm().getConfig().set("setup.spawn." + spawn, player.getLocation());
                 hg.getDsm().saveConfig();
                 player.sendMessage("Spawn is marked");
                 return true;
@@ -135,8 +150,8 @@ public class setupCommand extends CommandA {
 
                 Location loc = player.getLocation().toCenterLocation();
                 loc.setPitch(0);
-                int[] yaws = {0, 90, 180, 270};
-                loc.setYaw(yaws[(Math.round(loc.getYaw() / 90f) % 4)]);
+                int[] yaws = {180, 270, 0, 90};
+                loc.setYaw(yaws[(Math.round((Location.normalizeYaw(loc.getYaw()) + 180) / 90f) % 4)]);
                 loc = loc.add(0, 1, 0);
 
                 hg.getDsm().getConfig().set("pregame.f-arena.spawns.field" + field + ".spawn" + pos, loc);
@@ -407,9 +422,18 @@ public class setupCommand extends CommandA {
 
         }
 
-        HashMap<Integer, String[]> result = new HashMap<>();
+        Match[] r = new Match[matches.size()];
+        int frounds = hg.getGsm().getConfig().getInt("stickfight-rounds", 15);
         for (int i = 0; i < matches.size(); i++) {
-            result.put(i, matches.get(i));
+            OfflinePlayer p1 = hg.getServer().getOfflinePlayerIfCached(matches.get(i)[0]);
+            OfflinePlayer p2 = hg.getServer().getOfflinePlayerIfCached(matches.get(i)[1]);
+            r[i] = new Match(p1, p2, frounds);
+        }
+
+        HashMap<String, Match> result = new HashMap<>();
+
+        for (int i = 0; i < r.length; i++) {
+            result.put("" + i, r[i]);
         }
 
         hg.getDsm().getConfig().set("pregame.matches", result);
