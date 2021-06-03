@@ -68,6 +68,7 @@ public class Fight implements Listener {
 
     void finish() {
         HandlerList.unregisterAll(this);
+        hg.getServer().sendMessage(Component.text("Fight on field " + field + " finished!"));
     }
 
     void newRound() {
