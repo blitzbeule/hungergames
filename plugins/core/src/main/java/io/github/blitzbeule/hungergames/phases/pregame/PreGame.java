@@ -1,13 +1,19 @@
-package io.github.blitzbeule.hungergames.phases;
+package io.github.blitzbeule.hungergames.phases.pregame;
 
 import io.github.blitzbeule.hungergames.Hungergames;
+import io.github.blitzbeule.hungergames.phases.Phase;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.GameRule;
 import org.bukkit.World;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
-public class PreGame extends Phase{
+public class PreGame extends Phase {
 
     public PreGame(Hungergames hg) {
         super(hg);
@@ -50,5 +56,28 @@ public class PreGame extends Phase{
     @Override
     public void disable() {
         HandlerList.unregisterAll(this);
+    }
+
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        if (EntityType.PLAYER != event.getEntityType()) {
+            return;
+        }
+        Player p = (Player) event.getEntity();
+
+        if (p.getScoreboardTags().contains("fight")) {
+            return;
+        }
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        if (event.getPlayer().getScoreboardTags().contains("fight")) {
+            return;
+        } else {
+            event.setRespawnLocation(hg.getDsm().getConfig().getLocation("setup.spawn.arena"));
+        }
     }
 }
