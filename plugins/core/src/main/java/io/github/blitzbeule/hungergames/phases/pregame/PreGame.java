@@ -2,6 +2,7 @@ package io.github.blitzbeule.hungergames.phases.pregame;
 
 import io.github.blitzbeule.hungergames.Hungergames;
 import io.github.blitzbeule.hungergames.phases.Phase;
+import io.github.blitzbeule.hungergames.storage.Match;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.GameRule;
@@ -63,6 +64,15 @@ public class PreGame extends Phase {
         HandlerList.unregisterAll(this);
     }
 
+
+    @EventHandler
+    public void onFightEnd(Fight.FightEndEvent event) {
+        for (Player p: event.getPlayers()) {
+            p.teleport(hg.getDsm().getConfig().getLocation("setup.spawn.arena"));
+        }
+        Match m = event.getFight().getMatch();
+        hg.getDsm().getConfig().set("pregame.matches." + event.getFight().getMatchNumber(), m);
+    }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {

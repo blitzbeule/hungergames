@@ -3,10 +3,12 @@ package io.github.blitzbeule.hungergames.phases.pregame;
 import io.github.blitzbeule.hungergames.Hungergames;
 import io.github.blitzbeule.hungergames.storage.Match;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -15,6 +17,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 
 public class Fight implements Listener {
@@ -37,6 +40,10 @@ public class Fight implements Listener {
 
     public Match getMatch() {
         return match;
+    }
+
+    public int getMatchNumber() {
+        return matchNumber;
     }
 
     public Fight(int matchNumber, Match match, int field, Hungergames plugin) {
@@ -72,6 +79,8 @@ public class Fight implements Listener {
     void finish() {
         HandlerList.unregisterAll(this);
         hg.getServer().sendMessage(Component.text("Fight on field " + field + " finished!"));
+        FightEndEvent e = new FightEndEvent(this, field, p1, p2);
+        Bukkit.getPluginManager().callEvent(e);
     }
 
     void newRound() {
@@ -177,4 +186,46 @@ public class Fight implements Listener {
     }
 
 
+    public class FightEndEvent extends Event {
+
+        public Fight getFight() {
+            return fight;
+        }
+
+        public int getField() {
+            return field;
+        }
+
+        public Player[] getPlayers() {
+            return players;
+        }
+
+        private final Fight fight;
+        private final int field;
+        private final Player[] players;
+
+        public FightEndEvent(Fight fight, int field, Player p1, Player p2) {
+            this.field = field;
+            this.fight = fight;
+            this.players = new Player[]{p1, p2};
+        }
+
+        public FightEndEvent(Fight fight, int field, Player[] players) {
+            this.players = players;
+            this.fight = fight;
+            this.field = field;
+        }
+
+        private static final HandlerList HANDLERS = new HandlerList();
+
+        @Override
+        public HandlerList getHandlers() {
+            return HANDLERS;
+        }
+
+        public static HandlerList getHandlerList() {
+            return HANDLERS;
+        }
+
+    }
 }
