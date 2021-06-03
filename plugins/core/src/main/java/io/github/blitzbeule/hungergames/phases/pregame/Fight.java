@@ -64,7 +64,7 @@ public class Fight implements Listener {
         firstDamage = false;
     }
 
-    void start() {
+    public void start() {
         hg.getServer().getPluginManager().registerEvents(this, hg);
         newRound();
     }
