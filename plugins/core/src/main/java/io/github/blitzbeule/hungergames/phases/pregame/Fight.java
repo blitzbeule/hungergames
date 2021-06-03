@@ -15,7 +15,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 
 public class Fight implements Listener {
@@ -35,6 +34,10 @@ public class Fight implements Listener {
     private long timestamp;
     private int timer;
     private boolean firstDamage;
+
+    public Match getMatch() {
+        return match;
+    }
 
     public Fight(int matchNumber, Match match, int field, Hungergames plugin) {
         this.matchNumber = matchNumber;
