@@ -9,7 +9,7 @@ import io.github.blitzbeule.hungergames.config.LocalizationGroups;
 import io.github.blitzbeule.hungergames.config.LocalizationLanguage;
 import io.github.blitzbeule.hungergames.config.SettingsManager;
 import io.github.blitzbeule.hungergames.config.lgroups.Message;
-import io.github.blitzbeule.hungergames.phases.PreGame;
+import io.github.blitzbeule.hungergames.phases.pregame.PreGame;
 import io.github.blitzbeule.hungergames.phases.Setup;
 import io.github.blitzbeule.hungergames.storage.Match;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
