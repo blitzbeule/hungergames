@@ -20,6 +20,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -424,8 +425,8 @@ public class setupCommand extends CommandA {
         Match[] r = new Match[matches.size()];
         int frounds = hg.getGsm().getConfig().getInt("stickfight-rounds", 15);
         for (int i = 0; i < matches.size(); i++) {
-            Player p1 = hg.getServer().getPlayer(matches.get(i)[0]);
-            Player p2 = hg.getServer().getPlayer(matches.get(i)[1]);
+            OfflinePlayer p1 = hg.getServer().getOfflinePlayerIfCached(matches.get(i)[0]);
+            OfflinePlayer p2 = hg.getServer().getOfflinePlayerIfCached(matches.get(i)[1]);
             r[i] = new Match(p1, p2, frounds);
         }
 

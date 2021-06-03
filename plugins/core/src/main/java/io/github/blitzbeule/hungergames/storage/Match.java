@@ -1,5 +1,6 @@
 package io.github.blitzbeule.hungergames.storage;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
@@ -8,14 +9,14 @@ import java.util.Map;
 
 public class Match implements ConfigurationSerializable {
 
-    Player[] players;
+    OfflinePlayer[] players;
     int rounds;
     Result[][] results;
     int current;
 
 
 
-    public Player[] getPlayers() {
+    public OfflinePlayer[] getPlayers() {
         return players;
     }
 
@@ -41,7 +42,7 @@ public class Match implements ConfigurationSerializable {
         return current / rounds;
     }
 
-    public Match(Player p1, Player p2, int rounds) {
+    public Match(OfflinePlayer p1, OfflinePlayer p2, int rounds) {
         this.rounds = rounds;
         players = new Player[2];
         players[0] = p1;
@@ -52,7 +53,7 @@ public class Match implements ConfigurationSerializable {
         initResults();
     }
 
-    public Match(Player[] players, int rounds) {
+    public Match(OfflinePlayer[] players, int rounds) {
         if (players.length != 2) {
             throw new IllegalArgumentException("Array is not of correct length.");
         }
@@ -64,7 +65,7 @@ public class Match implements ConfigurationSerializable {
         initResults();
     }
 
-    public Match(Player p1, Player p2) {
+    public Match(OfflinePlayer p1, OfflinePlayer p2) {
         rounds = 10;
         players = new Player[2];
         players[0] = p1;
@@ -75,7 +76,7 @@ public class Match implements ConfigurationSerializable {
         initResults();
     }
 
-    public Match(Player[] players) {
+    public Match(OfflinePlayer[] players) {
         if (players.length != 2) {
             throw new IllegalArgumentException("Array is not of correct length.");
         }

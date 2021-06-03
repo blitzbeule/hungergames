@@ -45,8 +45,11 @@ public class Fight implements Listener {
         } else {
             this.field = field;
         }
-        p1 = match.getPlayers()[0];
-        p2 = match.getPlayers()[1];
+        if (!(match.getPlayers()[0].isOnline() && match.getPlayers()[2].isOnline())) {
+            throw new IllegalArgumentException("The players must be online to create a fight.");
+        }
+        p1 = hg.getServer().getPlayer(match.getPlayers()[0].getUniqueId());
+        p2 = hg.getServer().getPlayer(match.getPlayers()[1].getUniqueId());
         sp1 = hg.getDsm().getConfig().getLocation("pregame.f-arena.spawns.field" + field + ".spawn1");
         sp2 = hg.getDsm().getConfig().getLocation("pregame.f-arena.spawns.field" + field + ".spawn2");
         deathHeight = (int) (Math.round(sp1.getY()) - 3);
