@@ -149,8 +149,8 @@ public class setupCommand extends CommandA {
 
                 Location loc = player.getLocation().toCenterLocation();
                 loc.setPitch(0);
-                int[] yaws = {0, 90, 180, 270};
-                loc.setYaw(yaws[(Math.round(loc.getYaw() / 90f) % 4)]);
+                int[] yaws = {180, 270, 0, 90};
+                loc.setYaw(yaws[(Math.round((Location.normalizeYaw(loc.getYaw()) + 180) / 90f) % 4)]);
                 loc = loc.add(0, 1, 0);
 
                 hg.getDsm().getConfig().set("pregame.f-arena.spawns.field" + field + ".spawn" + pos, loc);
