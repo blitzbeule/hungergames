@@ -48,8 +48,4 @@ permissions:
       hg.admin.setup.*: true
       hg.admin.phaseControl: true
       hg.admin.pregame: true
-  hg.*:
-    description: "Grants Permission to do everything in HG"
-    children:
-      hg.admin.*: true
     default: op
