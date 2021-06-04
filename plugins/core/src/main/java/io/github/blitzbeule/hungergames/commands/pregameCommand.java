@@ -20,6 +20,11 @@ public class pregameCommand extends CommandA{
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
+        if (!(sender.hasPermission("hg.admin.pregame"))) {
+            sender.sendMessage("You do not have the permission to do this");
+            return false;
+        }
+
         if (args.length == 0) {
             return false;
         }

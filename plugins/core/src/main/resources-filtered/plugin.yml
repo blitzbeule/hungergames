@@ -19,12 +19,18 @@ commands:
     description: Setup the hg plugin
     usage: "Usage: /<command> <operation> [parameters...]"
     aliases: ["hg setup"]
+    permission: "hg.admin.setup.*"
+    permission-message: "You do not have the permission to do this"
   hgpregame:
     description: Controls the pregame
     usage: "Usage: /<command> <operation> [parameters...]"
+    permission-message: "You do not have the permission to do this"
+    permission: "hg.admin.pregame"
   hgstart:
     description: Starts the main game
     usage: "Usage: /<command>"
+    permission: "hg.admin.phaseControl"
+    permission-message: "You do not have the permission to do this"
   hgtp:
     description: Tp players to destinations
     usage: "Usage: /<command> <destination>"
