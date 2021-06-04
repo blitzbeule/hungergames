@@ -92,7 +92,7 @@ public class Setup extends Phase{
 
     @EventHandler
     public void onLogin(PlayerLoginEvent event) {
-        if (hg.getServer().getWhitelistedPlayers().contains(Bukkit.getOfflinePlayer(event.getPlayer().getUniqueId()))) {
+        if (event.getPlayer().hasPermission("hg.admin.setup.byPassSpawnEnforcement")) {
             event.allow();
             return;
         }

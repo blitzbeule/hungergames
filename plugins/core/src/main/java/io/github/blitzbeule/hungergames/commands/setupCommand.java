@@ -43,6 +43,11 @@ public class setupCommand extends CommandA {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
+        if (!(sender.hasPermission("hg.admin.setup.*"))) {
+            sender.sendMessage("You do not have the permission to do this");
+            return false;
+        }
+
         String subcommand;
         if (args.length == 0) {
             subcommand = "-1";
@@ -53,6 +58,12 @@ public class setupCommand extends CommandA {
         switch (subcommand) {
 
             case "start":
+
+                if (!(sender.hasPermission("hg.admin.phaseControl"))) {
+                    sender.sendMessage("You do not have the permission to do this");
+                    return false;
+                }
+
                 hg.getState().setPhase(State.GamePhase.SETUP);
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
@@ -70,6 +81,12 @@ public class setupCommand extends CommandA {
                 return true;
 
             case "finish":
+
+                if (!(sender.hasPermission("hg.admin.phaseControl"))) {
+                    sender.sendMessage("You do not have the permission to do this");
+                    return false;
+                }
+
                 //TODO check somehow if setup is actually finished
                 hg.getState().setPhase(State.GamePhase.PRE_GAME);
                 return true;
