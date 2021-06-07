@@ -79,7 +79,7 @@ public class Setup extends Phase{
 
     @EventHandler
     public void onPlayerSpawn(PlayerSpawnLocationEvent event) {
-        if (event.getPlayer().getLastLogin() != 0) {
+        if (event.getPlayer().hasPlayedBefore()) {
             return;
         }
         Location loc = hg.getDsm().getConfig().getLocation("setup.spawn.lobby");
