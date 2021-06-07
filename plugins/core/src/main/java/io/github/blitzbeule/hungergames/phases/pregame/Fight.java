@@ -1,12 +1,11 @@
 package io.github.blitzbeule.hungergames.phases.pregame;
 
+import com.destroystokyo.paper.inventory.meta.ArmorStandMeta;
 import io.github.blitzbeule.hungergames.Hungergames;
 import io.github.blitzbeule.hungergames.storage.Match;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -16,6 +15,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +56,7 @@ public class Fight implements Listener {
         } else {
             this.field = field;
         }
-        if (!(match.getPlayers()[0].isOnline() && match.getPlayers()[2].isOnline())) {
+        if (!(match.getPlayers()[0].isOnline() && match.getPlayers()[1].isOnline())) {
             throw new IllegalArgumentException("The players must be online to create a fight.");
         }
         p1 = hg.getServer().getPlayer(match.getPlayers()[0].getUniqueId());
@@ -72,6 +73,8 @@ public class Fight implements Listener {
     }
 
     public void start() {
+        p1.addScoreboardTag("fight");
+        p2.addScoreboardTag("fight");
         hg.getServer().getPluginManager().registerEvents(this, hg);
         newRound();
     }
@@ -81,9 +84,25 @@ public class Fight implements Listener {
         hg.getServer().sendMessage(Component.text("Fight on field " + field + " finished!"));
         FightEndEvent e = new FightEndEvent(this, field, p1, p2);
         Bukkit.getPluginManager().callEvent(e);
+        p1.getInventory().clear();
+        p2.getInventory().clear();
+        p1.updateInventory();
+        p2.updateInventory();
+        p1.removeScoreboardTag("fight");
+        p2.removeScoreboardTag("fight");
     }
 
     void newRound() {
+
+        p1.getInventory().clear();
+        p2.getInventory().clear();
+
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p1.getName() +  " stick{Enchantments:[{id:\"minecraft:knockback\",lvl:2s}]} 1");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p2.getName() +  " stick{Enchantments:[{id:\"minecraft:knockback\",lvl:2s}]} 1");
+        p1.updateInventory();
+        p2.updateInventory();
+
+        noMove = true;
         if (current % 2 == 0) {
             p1.teleport(sp1, PlayerTeleportEvent.TeleportCause.PLUGIN);
             p2.teleport(sp2, PlayerTeleportEvent.TeleportCause.PLUGIN);
@@ -91,7 +110,9 @@ public class Fight implements Listener {
             p1.teleport(sp2, PlayerTeleportEvent.TeleportCause.PLUGIN);
             p2.teleport(sp1, PlayerTeleportEvent.TeleportCause.PLUGIN);
         }
-        noMove = true;
+
+
+
         firstDamage = false;
         rended = false;
         timestamp = System.currentTimeMillis();
@@ -111,6 +132,8 @@ public class Fight implements Listener {
                     p1.playSound(p1.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.HOSTILE, 1, 1);
                     p2.sendActionBar(Component.text("GO"));
                     p2.playSound(p2.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.HOSTILE, 1, 1);
+                    p1.setHealth(20);
+                    p2.setHealth(20);
                     cancel();
                 }
             }
@@ -127,7 +150,7 @@ public class Fight implements Listener {
             if (loser.equals(p1)) {
                 saveResults(Match.Result.LOSS, Match.Result.WIN);
             } else if (loser.equals(p2)) {
-                saveResults(Match.Result.LOSS, Match.Result.WIN);
+                saveResults(Match.Result.WIN, Match.Result.LOSS);
             } else {
                 throw new IllegalArgumentException("Player is not in fight");
             }
@@ -167,6 +190,7 @@ public class Fight implements Listener {
                 return;
             }
             if (event.getTo().getY() < deathHeight) {
+                event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_PLAYER_DEATH, SoundCategory.HOSTILE, 1, 1);
                 endRound(event.getPlayer());
             }
         }

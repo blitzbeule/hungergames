@@ -5,8 +5,11 @@ import io.github.blitzbeule.hungergames.phases.pregame.Fight;
 import io.github.blitzbeule.hungergames.storage.FightResult;
 import io.github.blitzbeule.hungergames.storage.Match;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 
 import java.util.*;
@@ -33,6 +36,9 @@ public class pregameCommand extends CommandA{
             case "fight":
                 return newFights(sender);
 
+            case "test":
+                return testPregame(args, sender);
+
             case "results":
                 return saveResults(sender);
         }
@@ -40,12 +46,33 @@ public class pregameCommand extends CommandA{
         return false;
     }
 
+    private boolean testPregame(String[] args, CommandSender sender) {
+
+        Player p1 = Bukkit.getPlayer(args[1]);
+        Player p2 = Bukkit.getPlayer(args[2]);
+        int field = Integer.parseInt(args[3]);
+
+        Match m = new Match(p1, p2, 10);
+        Fight f = new Fight(0, m, field, hg);
+
+        f.start();
+        return false;
+    }
+
     private boolean saveResults(CommandSender sender) {
-        HashMap<String, Match> matches = hg.getDsm().getConfig().getObject("pregame.matches", HashMap.class);
+        ConfigurationSection section = hg.getDsm().getConfig().getConfigurationSection("pregame.matches");
+
+        int count = 0;
+        while (section.getSerializable("" + count, Match.class) != null) {
+            count++;
+        }
 
         boolean valid = true;
-        for (int i = 0; i < matches.size(); i++) {
-            Match.Result[][] r = matches.get(""+i).getResults();
+        ArrayList<Match> matches = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Match match = section.getSerializable(""+i, Match.class);
+            matches.add(match);
+            Match.Result[][] r = match.getResults();
             for (int j = 0; j < r.length; j++) {
                 for (int k = 0; k < r[j].length; k++) {
                     if (r[j][k] == Match.Result.NONE) {
@@ -63,7 +90,7 @@ public class pregameCommand extends CommandA{
             teams.add(t.getEntries().toArray(new String[0]));
         });
 
-        List<FightResult> results = FightResult.fullEvaluate(matches.values().toArray(new Match[0]), teams).stream().toList();
+        List<FightResult> results = FightResult.fullEvaluate(matches.toArray(new Match[0]), teams).stream().toList();
 
         for (int i = 0; i < results.size(); i++) {
             hg.getDsm().getConfig().set("pregame.results." + i, results.get(i));

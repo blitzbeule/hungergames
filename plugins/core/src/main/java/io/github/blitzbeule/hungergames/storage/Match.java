@@ -1,11 +1,13 @@
 package io.github.blitzbeule.hungergames.storage;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Match implements ConfigurationSerializable {
 
@@ -99,10 +101,16 @@ public class Match implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         HashMap<String, Object> r = new HashMap<>();
         r.put("rounds", rounds);
-        r.put("players", players);
+        HashMap<String, String> pm = new HashMap<>();
+        pm.put("0", players[0].getUniqueId().toString());
+        pm.put("1", players[1].getUniqueId().toString());
+        r.put("players", pm);
         HashMap<String, Object> rs = new HashMap<>();
         for (int i = 0; i < rounds; i++) {
-            rs.put("" + i, new String[]{results[i][0].getLabel(), results[i][1].getLabel()});
+            HashMap<String, String> r1 = new HashMap<>();
+            r1.put("1", results[i][0].getLabel());
+            r1.put("2", results[i][1].getLabel());
+            rs.put("" + i, r1);
         }
         r.put("results", rs);
         r.put("current", current);
@@ -112,13 +120,17 @@ public class Match implements ConfigurationSerializable {
     public Match(Map<String, Object> map) {
 
         rounds = (int) map.get("rounds");
-        players = (Player[]) map.get("players");
+        players = new OfflinePlayer[2];
+        Map<String, String> pmap = (Map<String, String>) map.get("players");
+        players[0] = Bukkit.getOfflinePlayer(UUID.fromString(pmap.get("0")));
+        players[1] = Bukkit.getOfflinePlayer(UUID.fromString(pmap.get("1")));
+
         Map<String, Object> rs = (Map<String, Object>) map.get("results");
         results = new Result[this.rounds][2];
         for (int i = 0; i < rounds; i++) {
-            String[] st = (String[]) rs.get("" + i);
-            results[i][0] = Result.getByLabel(st[0]);
-            results[i][1] = Result.getByLabel(st[1]);
+            HashMap<String, String> st = (HashMap<String, String>) rs.get("" + i);
+            results[i][0] = Result.getByLabel(st.get("1"));
+            results[i][1] = Result.getByLabel(st.get("2"));
         }
         current = (int) map.get("current");
 

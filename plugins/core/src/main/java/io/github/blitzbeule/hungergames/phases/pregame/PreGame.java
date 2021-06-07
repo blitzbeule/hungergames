@@ -72,6 +72,7 @@ public class PreGame extends Phase {
         }
         Match m = event.getFight().getMatch();
         hg.getDsm().getConfig().set("pregame.matches." + event.getFight().getMatchNumber(), m);
+        hg.getDsm().saveConfig();
     }
 
     @EventHandler
@@ -86,6 +87,10 @@ public class PreGame extends Phase {
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+            event.setCancelled(true);
+            return;
+        }
         if (EntityType.PLAYER != event.getEntityType()) {
             return;
         }
