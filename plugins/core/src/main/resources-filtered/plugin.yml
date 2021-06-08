@@ -15,6 +15,11 @@ commands:
     description: Get Plugin Info
     usage: "Usage: /<command>"
     aliases: ["hg info"]
+  hgconnect:
+    description: Connect with Discord Account
+    usage: "Usage: /<command> <<discord-tag> | verify <code>>"
+    permission: "hg.connect"
+    permission-message: "You do not have the permission to do this"
   hgsetup:
     description: Setup the hg plugin
     usage: "Usage: /<command> <operation> [parameters...]"
@@ -55,3 +60,6 @@ permissions:
       hg.admin.phaseControl: true
       hg.admin.pregame: true
     default: op
+  hg.connect:
+    description: "Permission to connect discord account"
+    default: true
