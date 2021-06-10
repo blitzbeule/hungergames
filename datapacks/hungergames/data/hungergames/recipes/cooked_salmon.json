@@ -1,0 +1,10 @@
+{
+	"type": "campfire_cooking",
+	"group": "cooked_food",
+	"ingredient": {
+		"item": "minecraft:salmon"
+	},
+	"result": "minecraft:cooked_salmon",
+	"experience": 0.1,
+	"cookingtime": 1200
+}
