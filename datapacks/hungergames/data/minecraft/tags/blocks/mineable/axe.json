@@ -1,7 +1,6 @@
 {
 	"replace": true,
 	"values": [
-		"minecraft:note_block",
 		"minecraft:attached_melon_stem",
 		"minecraft:attached_pumpkin_stem",
 		"minecraft:azalea",
@@ -28,15 +27,12 @@
 		"minecraft:composter",
 		"minecraft:crafting_table",
 		"minecraft:crimson_fungus",
-		"minecraft:daylight_detector",
 		"minecraft:dead_bush",
-		"minecraft:fern",
 		"minecraft:fletching_table",
 		"minecraft:glow_lichen",
 		"minecraft:grass",
 		"minecraft:hanging_roots",
 		"minecraft:jack_o_lantern",
-		"minecraft:jukebox",
 		"minecraft:ladder",
 		"minecraft:large_fern",
 		"minecraft:lectern",

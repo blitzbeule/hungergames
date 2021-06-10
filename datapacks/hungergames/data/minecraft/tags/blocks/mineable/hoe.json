@@ -5,10 +5,7 @@
 		"minecraft:warped_wart_block",
 		"minecraft:hay_block",
 		"minecraft:dried_kelp_block",
-		"minecraft:target",
 		"minecraft:shroomlight",
-		"minecraft:sponge",
-		"minecraft:wet_sponge",
 		"minecraft:jungle_leaves",
 		"minecraft:oak_leaves",
 		"minecraft:spruce_leaves",
@@ -17,8 +14,6 @@
 		"minecraft:birch_leaves",
 		"minecraft:azalea_leaves",
 		"minecraft:flowering_azalea_leaves",
-		"minecraft:sculk_sensor",
-		"minecraft:moss_block",
 		"minecraft:moss_carpet"
 	]
 }
