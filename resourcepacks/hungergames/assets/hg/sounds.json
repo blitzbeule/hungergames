@@ -1,0 +1,12 @@
+{
+  "pflaster.used": {
+    "sounds": [
+      "hg:items/pflaster1"
+    ]
+  },
+  "syringe.use": {
+    "sounds": [
+      "hg:items/syringe1"
+    ]
+  }
+}
