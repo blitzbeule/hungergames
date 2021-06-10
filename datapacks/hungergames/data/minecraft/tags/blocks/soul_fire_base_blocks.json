@@ -1,7 +1,8 @@
 {
-  "replace": true,
-  "values": [
-    "minecraft:soul_sand",
-    "minecraft:soul_soil"
-  ]
+	"replace": true,
+	"values": [
+		"minecraft:soul_sand",
+		"minecraft:soul_soil",
+		"minecraft:deepslate"
+	]
 }
