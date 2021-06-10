@@ -1,0 +1,5 @@
+config: true
+stickfight-rounds: 15
+discord:
+  bot-token: replace-this-with-your-token
+  guild-id: replace-this-with-your-guild-id

@@ -1,59 +1,80 @@
 package io.github.blitzbeule.hungergames;
 
-import io.github.blitzbeule.hungergames.commands.hgCommand;
-import io.github.blitzbeule.hungergames.commands.infoCommand;
+import io.github.blitzbeule.hungergames.commands.*;
 import io.github.blitzbeule.hungergames.config.FileLProvider;
 import io.github.blitzbeule.hungergames.config.LocalizationGroups;
 import io.github.blitzbeule.hungergames.config.LocalizationLanguage;
 import io.github.blitzbeule.hungergames.config.SettingsManager;
 import io.github.blitzbeule.hungergames.config.lgroups.Message;
-import io.github.blitzbeule.hungergames.events.GameEventListener;
-import org.bukkit.Bukkit;
+import io.github.blitzbeule.hungergames.discord.DsConnection;
+import io.github.blitzbeule.hungergames.discord.HgBot;
+import io.github.blitzbeule.hungergames.phases.pregame.PreGame;
+import io.github.blitzbeule.hungergames.phases.Setup;
+import io.github.blitzbeule.hungergames.storage.FightResult;
+import io.github.blitzbeule.hungergames.storage.Match;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-
 public final class Hungergames extends JavaPlugin implements Listener {
 
-   public Message getLmessages() {
+    public HgBot getDsb() {
+        return dsb;
+    }
+
+    private HgBot dsb;
+
+    public Setup getSetupPhase() {
+        return setupPhase;
+    }
+
+    private Setup setupPhase;
+
+    public PreGame getPreGamePhase(){
+        return preGamePhase;
+    }
+
+    private PreGame preGamePhase;
+
+    public Message getLmessages() {
         return lmessages;
     }
 
-    Message lmessages;
+    private Message lmessages;
 
     public SettingsManager getGsm() {
         return gsm;
     }
 
-    SettingsManager gsm;
+    private SettingsManager gsm;
 
     public SettingsManager getDsm() {
         return dsm;
     }
 
-    SettingsManager dsm;
+    private SettingsManager dsm;
 
     public State getState() {
         return state;
     }
 
-    State state;
-
-    HashMap<String, Listener> listeners;
+    private State state;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
+        ConfigurationSerialization.registerClass(Match.class, "match");
+        ConfigurationSerialization.registerClass(FightResult.class, "fightresult");
+        ConfigurationSerialization.registerClass(DsConnection.class, "dsconnection");
         initBeforeState();
+        declarePhases();
 
         this.state = new State(this);
 
+        initPhases();
         initCommands();
-        initListeners();
-
+        getServer().getPluginManager().registerEvents(this, this);
     }
 
     @Override
@@ -61,41 +82,64 @@ public final class Hungergames extends JavaPlugin implements Listener {
         // Plugin shutdown logic
         gsm.saveConfig();
         dsm.saveConfig();
+        dsb.disable();
     }
 
-    void initListeners() {
+    void declarePhases() {
+        setupPhase = new Setup(this);
+        preGamePhase = new PreGame(this);
+    }
 
-        listeners.put("GameEventListener", new GameEventListener(this));
+    void initPhases() {
+        switch (state.getPhase()) {
+            case SETUP:
+                setupPhase.enabledOnStartup();
+                return;
 
-        getServer().getPluginManager().registerEvents(this, this);
-
-        if (state.getPhase() == State.GamePhase.GAME)
-            getServer().getPluginManager().registerEvents(listeners.get("GameEventListener"), this);
-
+            case PRE_GAME:
+                preGamePhase.enabledOnStartup();
+                return;
+        }
     }
 
     void initBeforeState() {
-        this.listeners = new HashMap<String, Listener>();
-
         this.lmessages = new Message(new FileLProvider(this, LocalizationGroups.MESSAGES, LocalizationLanguage.EN), this);
         this.gsm = new SettingsManager(this, "config.yml");
         this.dsm = new SettingsManager(this, "data.yml");
+        this.dsb = new HgBot(this);
     }
 
     void initCommands() {
         this.getCommand("hg").setExecutor(new hgCommand(this));
         this.getCommand("hginfo").setExecutor(new infoCommand(this));
+        this.getCommand("hgsetup").setExecutor(new setupCommand(this));
+        this.getCommand("hgtp").setExecutor(new tpCommand(this));
+        this.getCommand("hgpregame").setExecutor(new pregameCommand(this));
+        this.getCommand("hgconnect").setExecutor(new connectCommand(this));
     }
 
     @EventHandler
     public void onStateChanged(StateEvent event) {
-        if (event.isGamePhaseChanged() == true) {
-            if (event.getOldGamePhase() == State.GamePhase.GAME && state.getPhase() != State.GamePhase.GAME) {
-                HandlerList.unregisterAll(listeners.get("GameEventListener"));
-            }
-            if (event.getOldGamePhase() != State.GamePhase.GAME && state.getPhase() == State.GamePhase.GAME) {
-                getServer().getPluginManager().registerEvents(listeners.get("GameEventListener"), this);
-            }
+        if (event.getOldGamePhase().equals(event.getNew_game_phase())) {
+            return;
+        }
+        switch (event.getOldGamePhase()) {
+            case SETUP:
+                setupPhase.disable();
+                break;
+
+            case PRE_GAME:
+                preGamePhase.disable();
+                break;
+        }
+        switch (event.getNew_game_phase()) {
+            case SETUP:
+                setupPhase.enable();
+                break;
+
+            case PRE_GAME:
+                preGamePhase.enable();
+                break;
         }
     }
 }

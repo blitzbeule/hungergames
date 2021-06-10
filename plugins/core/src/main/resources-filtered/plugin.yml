@@ -1,0 +1,65 @@
+name: Hungergames
+version: ${project.version}
+main: io.github.blitzbeule.hungergames.Hungergames
+api-version: 1.16
+prefix: hg
+authors: [ blitzbeule ]
+description: Hungergames Plugin
+website: blitzbeule.github.io/hungergames
+depend: [WorldEdit]
+commands:
+  hg:
+    description: Command for all hg things
+    usage: "Usage: /<command> <subcommand> [arguments...]"
+  hginfo:
+    description: Get Plugin Info
+    usage: "Usage: /<command>"
+    aliases: ["hg info"]
+  hgconnect:
+    description: Connect with Discord Account
+    usage: "Usage: /<command> <<discord-tag> | verify <code>>"
+    permission: "hg.connect"
+    permission-message: "You do not have the permission to do this"
+  hgsetup:
+    description: Setup the hg plugin
+    usage: "Usage: /<command> <operation> [parameters...]"
+    aliases: ["hg setup"]
+    permission: "hg.admin.setup.*"
+    permission-message: "You do not have the permission to do this"
+  hgpregame:
+    description: Controls the pregame
+    usage: "Usage: /<command> <operation> [parameters...]"
+    permission-message: "You do not have the permission to do this"
+    permission: "hg.admin.pregame"
+  hgstart:
+    description: Starts the main game
+    usage: "Usage: /<command>"
+    permission: "hg.admin.phaseControl"
+    permission-message: "You do not have the permission to do this"
+  hgtp:
+    description: Tp players to destinations
+    usage: "Usage: /<command> <destination>"
+permissions:
+  hg.admin.setup.byPassSpawnEnforcement:
+    description: "Bypass spawn enforcement during setup"
+  hg.admin.setup.*:
+    description: "HG Setup permissions"
+    children:
+      hg.admin.setup.byPassSpawnEnforcement: true
+  hg.admin.pregame:
+    description: "Allow player to start next round"
+  hg.admin.phaseControl:
+    description: "Allow player to control active phases"
+  hg.admin.sendIngameCommands:
+    description: "Allow Player to send commands while he is ingame"
+  hg.admin.*:
+    description: "HG Admin permissions"
+    children:
+      hg.admin.sendIngameCommands: true
+      hg.admin.setup.*: true
+      hg.admin.phaseControl: true
+      hg.admin.pregame: true
+    default: op
+  hg.connect:
+    description: "Permission to connect discord account"
+    default: true
