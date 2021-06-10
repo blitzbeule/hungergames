@@ -2,13 +2,19 @@
 	"type": "minecraft:overworld",
 	"generator": {
 		"type": "minecraft:noise",
-		"seed": -1935630276,
+		"seed": 0,
 		"settings": {
 			"name": "minecraft:overworld",
 			"bedrock_roof_position": -10,
 			"bedrock_floor_position": 0,
 			"sea_level": 63,
+			"min_surface_level": 0,
 			"disable_mob_generation": true,
+			"noise_caves_enabled": true,
+			"noodle_caves_enabled": false,
+			"aquifers_enabled": true,
+			"deepslate_enabled": true,
+			"ore_veins_enabled": false,
 			"default_block": {
 				"Name": "minecraft:stone"
 			},
@@ -19,6 +25,7 @@
 				}
 			},
 			"noise": {
+				"min_y": 0,
 				"height": 256,
 				"density_factor": 1,
 				"density_offset": -0.46875,
