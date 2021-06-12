@@ -1,0 +1,38 @@
+{
+	"display": {
+		"icon": {
+			"item": "minecraft:red_bed"
+		},
+		"title": "This will be a long night...",
+		"description": "This will be a long night...",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": true
+	},
+	"parent": "hungergames:game/root",
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:slept_in_bed",
+			"conditions": {
+				"player": [
+					{
+						"condition": "minecraft:random_chance",
+						"chance": 0.9
+					},
+					{
+						"condition": "minecraft:entity_properties",
+						"entity": "this",
+						"predicate": {
+							"player": {
+								"gamemode": "survival"
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"rewards": {
+		"experience": 1
+	}
+}

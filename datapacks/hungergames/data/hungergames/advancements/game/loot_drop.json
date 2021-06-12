@@ -1,0 +1,19 @@
+{
+	"display": {
+		"icon": {
+			"item": "minecraft:item_frame",
+			"nbt": "{CustomModelData:777778}"
+		},
+		"title": "A Loot Drop is searching for you! Look around!",
+		"description": "A Loot Drop is searching for you! Look around!",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": true
+	},
+	"parent": "hungergames:game/root",
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:impossible"
+		}
+	}
+}
