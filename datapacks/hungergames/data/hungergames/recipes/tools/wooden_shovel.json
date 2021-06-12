@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "shovel",
+	"pattern": ["m", "s", "s"],
+	"key": {
+		"m": {
+			"tag": "minecraft:planks"
+		},
+		"s": {
+			"item": "minecraft:stick"
+		}
+	},
+	"result": {
+		"item": "minecraft:wooden_shovel"
+	}
+}
