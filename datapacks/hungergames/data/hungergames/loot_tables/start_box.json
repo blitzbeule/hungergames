@@ -146,7 +146,7 @@
 						},
 						{
 							"function": "minecraft:set_nbt",
-							"tag": "{display:{Name:'{\"text\":\"Basic Survival Recipes\",\"color\":\"light_purple\"}',Lore:['{\"text\":\"Open to learn recipes of this book.\"}']},Recipes:[\"hungergames:campfire\",\"hungergames:bannerduplicate\",\"hungergames:repairitem\",\"hungergames:shielddecoration\",\"hungergames:soul_campfire\",\"hungergames:tippedarrow\"]}"
+							"tag": "{display:{Name:'{\"text\":\"Basic Survival Recipes\",\"color\":\"light_purple\"}',Lore:['{\"text\":\"Open to learn recipes of this book.\"}']},Recipes:[\"hungergames:crafting/campfire\",\"hungergames:special/bannerduplicate\",\"hungergames:special/repairitem\",\"hungergames:special/shielddecoration\",\"hungergames:crafting/soul_campfire\",\"hungergames:special/tippedarrow\"]}"
 						}
 					]
 				}
