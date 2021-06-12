@@ -132,6 +132,25 @@
 					]
 				}
 			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:knowledge_book",
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": 1
+						},
+						{
+							"function": "minecraft:set_nbt",
+							"tag": "{display:{Name:'{\"text\":\"Basic Survival Recipes\",\"color\":\"light_purple\"}',Lore:['{\"text\":\"Open to learn recipes of this book.\"}']},Recipes:[\"hungergames:campfire\",\"hungergames:bannerduplicate\",\"hungergames:repairitem\",\"hungergames:shielddecoration\",\"hungergames:soul_campfire\",\"hungergames:tippedarrow\"]}"
+						}
+					]
+				}
+			]
 		}
 	]
 }

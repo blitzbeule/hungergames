@@ -1,0 +1,21 @@
+{
+	"display": {
+		"icon": {
+			"item": "minecraft:stone"
+		},
+		"title": "Game",
+		"description": "All Game hints and advancements",
+		"background": "minecraft:textures/block/deepslate.png",
+		"show_toast": false,
+		"announce_to_chat": false,
+		"hidden": true
+	},
+	"criteria": {
+		"test": {
+			"trigger": "minecraft:impossible"
+		}
+	},
+	"rewards": {
+		"loot": ["hungergames:game_started"]
+	}
+}

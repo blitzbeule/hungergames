@@ -1,0 +1,24 @@
+{
+	"type": "minecraft:generic",
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:chest",
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": 1
+						},
+						{
+							"function": "minecraft:set_nbt",
+							"tag": "{BlockEntityTag:{LootTable:\"hungergames:start_box\"}}"
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,19 @@
+{
+	"display": {
+		"icon": {
+			"item": "minecraft:clock"
+		},
+		"title": "The Game has started",
+		"description": "The Game started. Good luck!",
+		"show_toast": true,
+		"announce_to_chat": false,
+		"hidden": true
+	},
+	"parent": "hungergames:game/root",
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:impossible"
+		}
+	},
+	"rewards": {}
+}
