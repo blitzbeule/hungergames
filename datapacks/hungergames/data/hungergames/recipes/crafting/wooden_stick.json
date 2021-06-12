@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "sticks",
+	"pattern": [" ", "w", "w"],
+	"key": {
+		"w": {
+			"tag": "hungergames:wood"
+		}
+	},
+	"result": {
+		"item": "minecraft:stick",
+		"count": 3
+	}
+}
