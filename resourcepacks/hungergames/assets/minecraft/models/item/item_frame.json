@@ -8,6 +8,10 @@
 		{
 			"predicate": { "custom_model_data": 777777 },
 			"model": "item/quartz_tube"
+		},
+		{
+			"predicate": { "custom_model_data": 777778 },
+			"model": "item/loot_drop"
 		}
 	]
 }
