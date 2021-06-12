@@ -26,7 +26,6 @@ Packs:
 	DiminishingTools
 	VisualSaplingGrowth
 	ArabicNumerals
-	MoreCrosshairs-Dot
 	PingColorIndicator
 	RainbowExperience
 	DarkUI

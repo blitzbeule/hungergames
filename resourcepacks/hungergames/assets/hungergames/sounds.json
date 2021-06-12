@@ -1,0 +1,8 @@
+{
+	"pflaster.used": {
+		"sounds": ["hungergames:items/pflaster1"]
+	},
+	"syringe.use": {
+		"sounds": ["hungergames:items/syringe1"]
+	}
+}
