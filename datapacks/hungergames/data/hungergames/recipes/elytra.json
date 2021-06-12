@@ -1,0 +1,22 @@
+{
+	"type": "crafting_shaped",
+	"pattern": ["bsb", "mcm", "b b"],
+	"key": {
+		"m": {
+			"item": "minecraft:phantom_membrane"
+		},
+		"s": {
+			"item": "minecraft:stick"
+		},
+		"b": {
+			"item": "minecraft:bone"
+		},
+		"c": {
+			"item": "minecraft:leather_chestplate"
+		}
+	},
+	"result": {
+		"item": "minecraft:elytra",
+		"count": 1
+	}
+}

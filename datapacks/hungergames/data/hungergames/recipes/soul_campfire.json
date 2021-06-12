@@ -1,0 +1,20 @@
+{
+	"type": "crafting_shaped",
+	"group": "campfire",
+	"pattern": ["tft", "fsf", "tft"],
+	"key": {
+		"s": {
+			"tag": "minecraft:logs"
+		},
+		"t": {
+			"item": "minecraft:stick"
+		},
+		"f": {
+			"tag": "minecraft:soul_fire_base_blocks"
+		}
+	},
+	"result": {
+		"item": "minecraft:soul_campfire",
+		"count": 1
+	}
+}

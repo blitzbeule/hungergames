@@ -1,0 +1,9 @@
+{
+	"replace": true,
+	"values": [
+		"minecraft:netherrack",
+		"minecraft:magma_block",
+		"minecraft:bedrock",
+		"#minecraft:soul_fire_base_blocks"
+	]
+}

@@ -1,0 +1,20 @@
+{
+	"type": "crafting_shaped",
+	"group": "campfire",
+	"pattern": ["tft", "fsf", "tft"],
+	"key": {
+		"s": {
+			"tag": "minecraft:logs"
+		},
+		"t": {
+			"item": "minecraft:stick"
+		},
+		"f": {
+			"tag": "minecraft:coals"
+		}
+	},
+	"result": {
+		"item": "minecraft:campfire",
+		"count": 1
+	}
+}

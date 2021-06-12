@@ -1,0 +1,7 @@
+{
+  "replace": true,
+  "values": [
+    "#minecraft:base_stone_overworld",
+    "minecraft:dirt"
+  ]
+}

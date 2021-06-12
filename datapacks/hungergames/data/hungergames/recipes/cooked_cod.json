@@ -1,0 +1,10 @@
+{
+	"type": "campfire_cooking",
+	"group": "cooked_food",
+	"ingredient": {
+		"item": "minecraft:cod"
+	},
+	"result": "minecraft:cooked_cod",
+	"experience": 0.1,
+	"cookingtime": 1200
+}

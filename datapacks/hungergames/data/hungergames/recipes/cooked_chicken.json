@@ -1,0 +1,10 @@
+{
+	"type": "campfire_cooking",
+	"group": "cooked_food",
+	"ingredient": {
+		"item": "minecraft:chicken"
+	},
+	"result": "minecraft:cooked_chicken",
+	"experience": 0.1,
+	"cookingtime": 1200
+}

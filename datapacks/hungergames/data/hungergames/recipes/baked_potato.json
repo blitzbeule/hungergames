@@ -1,0 +1,10 @@
+{
+	"type": "campfire_cooking",
+	"group": "cooked_food",
+	"ingredient": {
+		"item": "minecraft:potato"
+	},
+	"result": "minecraft:baked_potato",
+	"experience": 0.2,
+	"cookingtime": 600
+}
