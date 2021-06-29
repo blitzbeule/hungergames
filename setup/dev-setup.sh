@@ -5,7 +5,7 @@ read RAM
 
 mkdir ../server
 cd ../server/
-curl https://papermc.io/api/v1/paper/1.16.5/latest/download --output paper.jar
+curl https://papermc.io/api/v1/paper/1.17/latest/download --output paper.jar
 
 echo "eula=true" > eula.txt
 echo "java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms${RAM}G -Xmx${RAM}G -jar paper.jar --nogui" > start.sh
