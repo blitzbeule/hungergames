@@ -6,8 +6,10 @@ import io.github.blitzbeule.hungergames.config.LocalizationGroups;
 import io.github.blitzbeule.hungergames.config.LocalizationLanguage;
 import io.github.blitzbeule.hungergames.config.SettingsManager;
 import io.github.blitzbeule.hungergames.config.lgroups.Message;
+import io.github.blitzbeule.hungergames.discord.DiscordWebhook;
 import io.github.blitzbeule.hungergames.discord.DsConnection;
 import io.github.blitzbeule.hungergames.discord.HgBot;
+import io.github.blitzbeule.hungergames.phases.DiscordChat;
 import io.github.blitzbeule.hungergames.phases.pregame.PreGame;
 import io.github.blitzbeule.hungergames.phases.Setup;
 import io.github.blitzbeule.hungergames.storage.FightResult;
@@ -17,7 +19,22 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.awt.*;
+import java.io.IOException;
+
 public final class Hungergames extends JavaPlugin implements Listener {
+
+    public DiscordChat getDc() {
+        return dc;
+    }
+
+    private DiscordChat dc;
+
+    public String getDw() {
+        return dw;
+    }
+
+    private String dw;
 
     public HgBot getDsb() {
         return dsb;
@@ -83,6 +100,14 @@ public final class Hungergames extends JavaPlugin implements Listener {
         gsm.saveConfig();
         dsm.saveConfig();
         dsb.disable();
+
+        DiscordWebhook ddw = new DiscordWebhook(dw);
+        ddw.addEmbed(
+                new DiscordWebhook.EmbedObject()
+                .setColor(Color.RED)
+                .setDescription("Server shutdown")
+                .setAuthor("Server", "", "")
+        );
     }
 
     void declarePhases() {
@@ -107,6 +132,9 @@ public final class Hungergames extends JavaPlugin implements Listener {
         this.gsm = new SettingsManager(this, "config.yml");
         this.dsm = new SettingsManager(this, "data.yml");
         this.dsb = new HgBot(this);
+        this.dw = gsm.getConfig().getString("discord.webhook");
+        DiscordWebhook.initWebhook(new DiscordWebhook(dw));
+        this.dc = new DiscordChat(this);
     }
 
     void initCommands() {

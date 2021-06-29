@@ -1,6 +1,7 @@
 package io.github.blitzbeule.hungergames.phases.pregame;
 
 import io.github.blitzbeule.hungergames.Hungergames;
+import io.github.blitzbeule.hungergames.phases.DiscordChat;
 import io.github.blitzbeule.hungergames.phases.Phase;
 import io.github.blitzbeule.hungergames.storage.Match;
 import org.bukkit.Difficulty;
@@ -48,6 +49,7 @@ public class PreGame extends Phase {
     public void enabledOnStartup() {
         gamerules();
         hg.getServer().getPluginManager().registerEvents(this, hg);
+        hg.getServer().getPluginManager().registerEvents(hg.getDc(), hg);
     }
 
     @Override
@@ -57,11 +59,13 @@ public class PreGame extends Phase {
         hg.getServer().getOnlinePlayers().forEach((Player p) -> {
             p.setFoodLevel(20);
         });
+        hg.getServer().getPluginManager().registerEvents(hg.getDc(), hg);
     }
 
     @Override
     public void disable() {
         HandlerList.unregisterAll(this);
+        HandlerList.unregisterAll(hg.getDc());
     }
 
 

@@ -1,8 +1,11 @@
 package io.github.blitzbeule.hungergames.phases;
 
 import io.github.blitzbeule.hungergames.Hungergames;
+import io.github.blitzbeule.hungergames.discord.DiscordWebhook;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +16,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
+import java.io.IOException;
+
 public class Setup extends Phase{
+
     public Setup(Hungergames hg) {
         super(hg);
     }
@@ -22,6 +28,7 @@ public class Setup extends Phase{
     public void enabledOnStartup() {
         gamerules();
         hg.getServer().getPluginManager().registerEvents(this, hg);
+        hg.getServer().getPluginManager().registerEvents(hg.getDc(), hg);
     }
 
     @Override
@@ -31,6 +38,7 @@ public class Setup extends Phase{
         hg.getServer().getOnlinePlayers().forEach((Player p) -> {
             p.setFoodLevel(20);
         });
+        hg.getServer().getPluginManager().registerEvents(hg.getDc(), hg);
     }
 
 
@@ -59,7 +67,7 @@ public class Setup extends Phase{
     @Override
     public void disable() {
         HandlerList.unregisterAll(this);
-
+        HandlerList.unregisterAll(hg.getDc());
     }
 
     @EventHandler
